@@ -36,7 +36,7 @@ function Navbar({ variant = "default" }: NavbarProps) {
         setIsMenuOpen(false);
     }
     return (<div>
-        <div className="top"></div>
+        {/* <div className="top"></div> */}
         <nav className={`navbar navbar-${variant}`}>
 
             {variant === "default" && (<button className="nav-icon-button" aria-label="Open menu" onClick={toggleMenu}>
