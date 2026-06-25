@@ -1,4 +1,5 @@
 .navbar {
+    font-family: "Iosevka Charon";
     width: 100%;
     height: 115px;
     background-color: #f8f5ed;
@@ -73,3 +74,44 @@
     transform: rotate(45deg);
     border-radius: 10px;
 } */
+
+.dropdown-menu {
+    position: absolute;
+    top: 90px;
+    left: 28px;
+
+    width: 180px;
+    padding: 12px;
+
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    z-index: 999;
+}
+
+.dropdown-link {
+    font-family: "Iosevka Charon";
+    padding: 12px 14px;
+
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    border-radius: 10px;
+
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-link:hover {
+    background-color: #f4efe3;
+}
+
+.dropdown-link.active {
+    background-color: #f4efe3;
+    color: #a36a00;
+    font-weight: 700;
+}
