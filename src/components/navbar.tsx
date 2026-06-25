@@ -2,8 +2,15 @@ import logo from "../assets/Logo.svg";
 import "./Navbar.css"
 import search from "../assets/search.svg";
 import hamburg from "../assets/blog-button.svg";
+import back from "../assets/back.svg";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+
+
+type NavbarProps = {
+    variant?: "default" | "back" | "minimal";
+};
 
 const navLinks = [
     // { name: "Home", path: "/" },
@@ -12,8 +19,14 @@ const navLinks = [
     { name: "Report Bug", path: "/rp-bug" },
 ];
 
-function Navbar() {
+function Navbar({ variant = "default" }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const navigate = useNavigate();
+
+    function goBack() {
+        navigate(-1);
+    }
 
     function toggleMenu() {
         setIsMenuOpen(!isMenuOpen);
@@ -23,19 +36,27 @@ function Navbar() {
         setIsMenuOpen(false);
     }
     return (
-        <nav className="navbar">
-            <button className="nav-icon-button" aria-label="Open menu" onClick={toggleMenu}>
+        <nav className={`navbar navbar-${variant}`}>
+            {variant === "default" && (<button className="nav-icon-button" aria-label="Open menu" onClick={toggleMenu}>
                 <img src={hamburg} />
-            </button>
+            </button>)
+            }
 
+            {variant === "default" && (
+                <button className="nav-icon-button" aria-label="Search">
+                    <span className="search-icon">
+                        <img src={search} />
+                    </span>
+                </button>
+            )}
             <img className="navbar-logo" src={logo} alt="WhereTuWin Logo" />
 
-            <button className="nav-icon-button" aria-label="Search">
-                <span className="search-icon">
-                    <img src={search} />
-                </span>
-            </button>
+            {variant === "back" &&
+                (<button className="nav-back" onClick={goBack}>
+                    <img src={back} />
+                </button>
 
+                )}
             {isMenuOpen && (
                 <div className="dropdown-menu">
                     {navLinks.map((link) => (
