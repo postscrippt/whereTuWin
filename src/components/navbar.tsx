@@ -6,10 +6,10 @@ import { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "Map", path: "/map" },
+    // { name: "Home", path: "/" },
     { name: "About", path: "/about" },
+    { name: "Contact Us", path: "/contact-us" },
+    { name: "Report Bug", path: "/rp-bug" },
 ];
 
 function Navbar() {
