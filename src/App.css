@@ -11,4 +11,11 @@ html,
   display: flex;
   justify-content: center;
   align-items: center;
+
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+
+.homepage.fade-out {
+  opacity: 0;
 }
