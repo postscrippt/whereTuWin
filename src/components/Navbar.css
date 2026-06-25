@@ -1,3 +1,8 @@
+.top {
+    padding-top: 59px;
+    background-color: #f8f5ed;
+}
+
 .navbar {
     font-family: "Iosevka Charon";
     width: 100%;
@@ -12,7 +17,7 @@
     box-sizing: border-box;
 
     position: fixed;
-    top: 0;
+    top: 59px;
     z-index: 2000;
 }
 

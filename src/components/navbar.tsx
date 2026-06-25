@@ -35,8 +35,10 @@ function Navbar({ variant = "default" }: NavbarProps) {
     function closeMenu() {
         setIsMenuOpen(false);
     }
-    return (
+    return (<div>
+        <div className="top"></div>
         <nav className={`navbar navbar-${variant}`}>
+
             {variant === "default" && (<button className="nav-icon-button" aria-label="Open menu" onClick={toggleMenu}>
                 <img src={hamburg} />
             </button>)
@@ -72,7 +74,9 @@ function Navbar({ variant = "default" }: NavbarProps) {
                 </div>
             )}
         </nav>
+    </div>
     );
+
 }
 
 export default Navbar;
