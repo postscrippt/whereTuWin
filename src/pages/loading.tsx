@@ -1,19 +1,27 @@
 import logo from "../assets/Logo.svg";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Loading() {
     const navigate = useNavigate();
+    const [isLeaving, setIsLeaving] = useState(false);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            navigate("/dashboard");
-        }, 2000);
+        const startFadeOut = setTimeout(() => {
+            setIsLeaving(true);
+        }, 1500);
 
-        return () => clearTimeout(timer);
+        const goToNextPage = setTimeout(() => {
+            navigate("/dashboard");
+        }, 2200);
+
+        return () => {
+            clearTimeout(startFadeOut);
+            clearTimeout(goToNextPage);
+        };
     }, [navigate]);
     return (
-        <div className="homepage">
+        <div className={`homepage ${isLeaving ? "fade-out" : ""}`}>
             <img className="logo" src={logo} alt="Logo" />
         </div>
     );
