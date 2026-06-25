@@ -2,6 +2,7 @@ import "./App.css"
 import "./index.css"
 import Loading from "./pages/loading.tsx";
 import Dashboard from "./pages/dashboard.tsx";
+import Navbar from "./components/navbar.tsx";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 

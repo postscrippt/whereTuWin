@@ -1,7 +1,9 @@
+import Navbar from "../components/navbar.tsx";
+
 function Dashboard() {
     return (
         <div>
-            <h1>Dashboard</h1>
+            <Navbar />
         </div>
     )
 }
