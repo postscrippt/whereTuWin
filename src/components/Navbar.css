@@ -1,5 +1,6 @@
 .top {
     position: fixed;
+    top: 59px;
     padding-top: 59px;
     background-color: #f8f5ed;
 }
