@@ -4,7 +4,7 @@ import Map from "../components/MapView.tsx";
 function Dashboard() {
     return (
         <div>
-            <Navbar />
+            <Navbar variant="default" />
             <Map />
         </div>
     )
