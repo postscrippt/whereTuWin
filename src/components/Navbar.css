@@ -1,8 +1,15 @@
 .top {
     position: fixed;
-    top: 59px;
+    top: 0;
+    left: 0;
+
+    width: 100%;
     padding-top: 59px;
+
     background-color: #f8f5ed;
+    z-index: 2000;
+
+    box-sizing: border-box;
 }
 
 .navbar {
