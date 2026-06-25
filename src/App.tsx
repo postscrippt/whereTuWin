@@ -1,7 +1,6 @@
 import "./App.css"
 import "./index.css"
 import Loading from "./pages/loading.tsx";
-import Dashboard from "./pages/dashboard.tsx";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -12,7 +11,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Loading />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* <Route path="/dashboard" element={<Dashboard />} /> */}
         </Routes>
       </BrowserRouter>
     </div>
