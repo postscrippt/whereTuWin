@@ -2,9 +2,11 @@ import logo from "../assets/Logo.svg";
 import "./Navbar.css"
 import search from "../assets/search.svg";
 import hamburg from "../assets/blog-button.svg";
-import back from "../assets/back.png";
+import back from "../assets/back.svg";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+
 
 type NavbarProps = {
     variant?: "default" | "back" | "minimal";
@@ -19,6 +21,12 @@ const navLinks = [
 
 function Navbar({ variant = "default" }: NavbarProps) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const navigate = useNavigate();
+
+    function goBack() {
+        navigate(-1);
+    }
 
     function toggleMenu() {
         setIsMenuOpen(!isMenuOpen);
@@ -44,7 +52,7 @@ function Navbar({ variant = "default" }: NavbarProps) {
             <img className="navbar-logo" src={logo} alt="WhereTuWin Logo" />
 
             {variant === "back" &&
-                (<button className="nav-back">
+                (<button className="nav-back" onClick={goBack}>
                     <img src={back} />
                 </button>
 
