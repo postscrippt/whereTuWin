@@ -20,3 +20,27 @@ html,
 .homepage.fade-out {
   opacity: 0;
 }
+
+/* .aboutpage {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+} */
+
+.picUs {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  width: 100vw;
+  height: auto;
+  max-height: 35vh;
+
+  object-fit: contain;
+  object-position: bottom center;
+
+  z-index: 10;
+}
