@@ -5,7 +5,7 @@ import {
   Marker,
   Popup,
   useMap,
-  Circle,
+  CircleMarker,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -46,11 +46,25 @@ function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function FlyToMarker({ position }: { position: [number, number] | null }) {
+function FlyToMarker({
+  position,
+  onFlyStart,
+  onFlyEnd,
+}: {
+  position: [number, number] | null;
+  onFlyStart: () => void;
+  onFlyEnd: () => void;
+}) {
   const map = useMap();
-  if (position) {
-    map.flyTo(position, 17);
-  }
+
+  useEffect(() => {
+    if (position) {
+      onFlyStart();
+      map.flyTo(position, 17);
+      map.once("moveend", onFlyEnd);
+    }
+  }, [position]);
+
   return null;
 }
 
@@ -115,7 +129,7 @@ function MapButtons({
       <button
         onClick={flyToNearest}
         style={buttonStyle}
-        title="Nearest win spot"
+        title="Nearest motorcycle taxi spot"
       >
         🏍️
       </button>
@@ -131,6 +145,7 @@ export default function MapView({ spots = testSpots }: Props) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
+  const [flying, setFlying] = useState(false);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -160,10 +175,14 @@ export default function MapView({ spots = testSpots }: Props) {
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution="© OpenStreetMap contributors © CARTO"
         />
-        <FlyToMarker position={selected} />
+        <FlyToMarker
+          position={selected}
+          onFlyStart={() => setFlying(true)}
+          onFlyEnd={() => setFlying(false)}
+        />
         <MapButtons userLocation={userLocation} spots={spots} />
-        {userLocation && (
-          <Circle
+        {userLocation && !flying && (
+          <CircleMarker
             center={userLocation}
             radius={8}
             pathOptions={{
