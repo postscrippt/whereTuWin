@@ -10,6 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import QueueCard from "./QueueCard";
+import { queueSpots, type Spot } from "../data/queueSpots";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "/marker-icon.png",
@@ -24,25 +25,17 @@ L.Icon.Default.mergeOptions({
 //   lng: number;
 // };
 
-type Spot = {
-  id: number;
-  name: string;
-  area?: string;
-  landmark?: string;
-  hours?: string;
-  lat: number;
-  lng: number;
-};
+
 
 type Props = {
   spots?: Spot[];
 };
 
-const testSpots: Spot[] = [
-  { id: 1, name: "B Dorm Bus Stop", lat: 14.0773, lng: 100.5951 },
-  { id: 2, name: "Tops Crosswalk", lat: 14.0763, lng: 100.5966 },
-  { id: 3, name: "Beside Green Canteen", lat: 14.0729, lng: 100.6014 },
-];
+// const testSpots: Spot[] = [
+//   { id: 1, name: "B Dorm Bus Stop", lat: 14.0773, lng: 100.5951 },
+//   { id: 2, name: "Tops Crosswalk", lat: 14.0763, lng: 100.5966 },
+//   { id: 3, name: "Beside Green Canteen", lat: 14.0729, lng: 100.6014 },
+// ];
 
 function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   const R = 6371000;
@@ -160,7 +153,7 @@ function MapButtons({
   );
 }
 
-export default function MapView({ spots = testSpots }: Props) {
+export default function MapView({ spots = queueSpots }: Props) {
   // const [selected, setSelected] = useState<[number, number] | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
   // const selectedPosition: [number, number] | null = selectedSpot
