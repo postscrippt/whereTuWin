@@ -65,7 +65,7 @@
     }
 
     .spot-card.collapsed {
-        transform: translateY(calc(100% - 110px));
+        transform: translateY(calc(100% - 140px));
     }
 
     .spot-card.expanded {
@@ -88,27 +88,12 @@
         transition: transform 0.25s ease;
     }
 
-    .spot-card.collapsed {
+    /* .spot-card.collapsed {
         transform: translateY(calc(100% - 160px));
-    }
+    } */
 
     .spot-card.expanded {
         transform: translateY(0);
-    }
-
-    .sheet-handle {
-        display: block;
-
-        width: 48px;
-        height: 5px;
-
-        margin: 0 auto 16px;
-
-        border: none;
-        border-radius: 999px;
-        background-color: #d8d2c4;
-
-        cursor: pointer;
     }
 
     .sheet-drag-area {
@@ -121,22 +106,4 @@
     .sheet-drag-area:active {
         cursor: grabbing;
     }
-
-    .sheet-handle {
-        width: 48px;
-        height: 5px;
-        margin: 0 auto;
-
-        border-radius: 999px;
-        background-color: #d8d2c4;
-    }
-
-    .spot-card.collapsed {
-        transform: translateY(calc(100% - 110px));
-    }
-
-    .spot-card.expanded {
-        transform: translateY(0);
-    }
-
 }
