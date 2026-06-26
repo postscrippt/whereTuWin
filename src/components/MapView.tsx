@@ -154,7 +154,7 @@ export default function MapView({ spots = testSpots }: Props) {
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
 
   // const [selected, setSelected] = useState<[number, number] | null>(null);
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  // const [selected, setSelected] = useState<[number, number] | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
