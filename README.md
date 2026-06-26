@@ -1,73 +1,83 @@
-# React + TypeScript + Vite
+# WhereTuWin 🏍️
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **Late to class. Need a Win. No idea where the nearest one is.**
+> We've all been there. This app fixes that.
 
-Currently, two official plugins are available:
+**WhereTuWin** is an interactive map for Thammasat University (Rangsit campus) students to locate the nearest motorcycle taxi (**Win / วิน**) queue spots — fast. Open the app, see where you are, find the closest Win, and get moving.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## What is a "Win"?
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+If you've never lived in Thailand: **Win** (วิน) are motorcycle taxi drivers in numbered colored vests who hang out at designated queue spots across the city. They're fast, cheap, and absolutely essential for navigating TU's sprawling Rangsit campus. Finding one when you're late is a skill. This app makes it effortless.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Interactive map** — powered by Leaflet + OpenStreetMap/CARTO tiles, centered on TU Rangsit
+- **Live geolocation** — your position shows as a blue dot on the map
+- **Nearest Win button** (🏍️) — one tap to fly the map to the closest queue spot
+- **My Location button** (📍) — re-centers the map on you
+- **Spot info cards** — tap any marker to see the spot's name, area, landmark, and operating hours
+- **Smooth splash screen** — because first impressions matter
+- **Hamburger menu** with About, Contact Us, and... a surprise
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Pages
+
+| Route         | Description                                               |
+| ------------- | --------------------------------------------------------- |
+| `/`           | Animated splash / loading screen                          |
+| `/dashboard`  | Main map view with all Win spots                          |
+| `/about`      | What this app is, how to use it, how to report wrong data |
+| `/contact-us` | Email + Instagram for the team                            |
+
+---
+
+> Spot missing or moved? Email **WhereTUWin@gmail.com** or hit the "Report Bug" link in the menu. (Yes, it's a link. Yes, it works. Trust us.)
+
+---
+
+## Tech Stack
+
+| Layer      | Tech                       |
+| ---------- | -------------------------- |
+| Framework  | React 19                   |
+| Language   | TypeScript                 |
+| Build tool | Vite                       |
+| Routing    | React Router DOM v7        |
+| Map        | React-Leaflet + Leaflet.js |
+| Deployment | Vercel                     |
+
+---
+
+## Project Structure
+
+```
+src/
+├── pages/
+│   ├── loading.tsx       # Splash screen with fade-out animation
+│   ├── dashboard.tsx     # Main page — Navbar + Map
+│   ├── about.tsx         # App info and how-to-use
+│   └── contactUs.tsx     # Contact info
+├── components/
+│   ├── MapView.tsx       # Full map logic, geolocation, fly-to buttons
+│   ├── QueueCard.tsx     # Spot info card (shown on marker click)
+│   ├── navbar.tsx        # Responsive nav with hamburger + back variants
+│   └── SearchBox.tsx     # Search (in progress)
+└── data/
+    └── queueSpots.tsx    # All spot data lives here
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Contact
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Built by TU students who like to wander (and occasionally miss the bus).
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Email:** WhereTUWin@gmail.com
+- **Instagram:** [@WhereTUWin](https://instagram.com/WhereTUWin)
+
+---
+
+_Made with caffeine, Google Maps envy, and the burning urgency of being three minutes late to a 9 AM._
