@@ -2,6 +2,7 @@ import { useState } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import QueueCard from "./QueueCard";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "/marker-icon.png",
@@ -35,30 +36,43 @@ function FlyToMarker({ position }: { position: [number, number] | null }) {
 }
 
 export default function MapView({ spots = testSpots }: Props) {
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+
+  const selectedPosition: [number, number] | null = selectedSpot
+    ? [selectedSpot.lat, selectedSpot.lng]
+    : null;
 
   return (
-    <MapContainer
-      center={[14.0707, 100.6058]}
-      zoom={15}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution="© OpenStreetMap contributors © CARTO"
-      />
-      <FlyToMarker position={selected} />
-      {spots.map((spot) => (
-        <Marker
-          key={spot.id}
-          position={[spot.lat, spot.lng]}
-          eventHandlers={{
-            click: () => setSelected([spot.lat, spot.lng]),
-          }}
-        >
-          <Popup>{spot.name}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <div className="map-page">
+      <MapContainer
+        center={[14.0707, 100.6058]}
+        zoom={15}
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution="© OpenStreetMap contributors © CARTO"
+        />
+        <FlyToMarker position={selectedPosition} />
+        {spots.map((spot) => (
+          <Marker
+            key={spot.id}
+            position={[spot.lat, spot.lng]}
+            eventHandlers={{
+              click: () => setSelectedSpot(spot),
+            }}
+          >
+            <Popup>{spot.name}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+
+      {selectedSpot && (
+        <QueueCard
+          spot={selectedSpot}
+          onClose={() => setSelectedSpot(null)}
+        />
+      )}
+    </div>
   );
 }
