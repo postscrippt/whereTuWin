@@ -51,7 +51,6 @@ ul {
   margin-left: -24px;
   margin-right: -24px;
 
-
   /* transform: translateX(-50%); */
 
   width: calc(100% + 48px);
@@ -102,6 +101,35 @@ ul {
   font-style: italic;
   font-weight: 700;
   line-height: normal;
+}
 
+.contactUsPage {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 
+.contactFormat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: 115px 24px 0;
+  box-sizing: border-box;
+  margin: 10px 0 0 0;
+}
+
+.social {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.inlinething {
+  display: flex;
+  flex-direction: row;
+  padding: 0;
+  gap: 8px;
 }
