@@ -85,14 +85,21 @@ const buttonStyle: React.CSSProperties = {
 function MapButtons({
   userLocation,
   spots,
+  onFlyStart,
+  onFlyEnd,
 }: {
   userLocation: [number, number] | null;
   spots: Spot[];
+  onFlyStart: () => void;
+  onFlyEnd: () => void;
 }) {
   const map = useMap();
 
   const flyToUser = () => {
-    if (userLocation) map.flyTo(userLocation, 17);
+    if (!userLocation) return;
+    onFlyStart();
+    map.flyTo(userLocation, 17);
+    map.once("moveend", onFlyEnd);
   };
 
   const flyToNearest = () => {
@@ -111,7 +118,9 @@ function MapButtons({
         nearest = spot;
       }
     });
+    onFlyStart();
     map.flyTo([nearest.lat, nearest.lng], 17);
+    map.once("moveend", onFlyEnd);
   };
 
   return (
@@ -180,7 +189,12 @@ export default function MapView({ spots = testSpots }: Props) {
           onFlyStart={() => setFlying(true)}
           onFlyEnd={() => setFlying(false)}
         />
-        <MapButtons userLocation={userLocation} spots={spots} />
+        <MapButtons
+          userLocation={userLocation}
+          spots={spots}
+          onFlyStart={() => setFlying(true)}
+          onFlyEnd={() => setFlying(false)}
+        />
         {userLocation && !flying && (
           <CircleMarker
             center={userLocation}
