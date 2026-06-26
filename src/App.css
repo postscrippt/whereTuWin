@@ -3,6 +3,8 @@ html,
 #root {
   margin: 0;
   font-family: "Iosevka Charon";
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .homepage {
@@ -21,12 +23,12 @@ html,
   opacity: 0;
 }
 
-/* .aboutpage {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-} */
+.aboutpage {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 
 .picUs {
   position: fixed;
@@ -39,8 +41,35 @@ html,
   height: auto;
   max-height: 35vh;
 
-  object-fit: contain;
+  /* object-fit: ; */
   object-position: bottom center;
 
   z-index: 10;
+}
+
+.textContent {
+  min-height: 100vh;
+  padding: 0 28px;
+  padding-top: 174px;
+  /* max-width: 650px; */
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: left;
+  justify-content: flex-start;
+}
+
+.aboutformat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  min-height: 100vh;
+  padding: 174px 24px 80px;
+  box-sizing: border-box;
 }
