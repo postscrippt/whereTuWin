@@ -1,4 +1,14 @@
-export const queueSpots = [
+export type Spot = {
+    id: number;
+    name: string;
+    area?: string;
+    landmark?: string;
+    hours?: string;
+    lat: number;
+    lng: number;
+};
+
+export const queueSpots: Spot[] = [
     {
         id: 1,
         name: "TU Main Gate Win",
