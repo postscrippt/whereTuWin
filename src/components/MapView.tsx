@@ -1,5 +1,12 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  CircleMarker,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import QueueCard from "./QueueCard";
@@ -27,52 +34,193 @@ const testSpots: Spot[] = [
   { id: 3, name: "Beside Green Canteen", lat: 14.0729, lng: 100.6014 },
 ];
 
-function FlyToMarker({ position }: { position: [number, number] | null }) {
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) *
+    Math.sin(dLng / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function FlyToMarker({
+  position,
+  onFlyStart,
+  onFlyEnd,
+}: {
+  position: [number, number] | null;
+  onFlyStart: () => void;
+  onFlyEnd: () => void;
+}) {
   const map = useMap();
-  if (position) {
-    map.flyTo(position, 17);
-  }
+
+  useEffect(() => {
+    if (position) {
+      onFlyStart();
+      map.flyTo(position, 17);
+      map.once("moveend", onFlyEnd);
+    }
+  }, [position]);
+
   return null;
+}
+
+const buttonStyle: React.CSSProperties = {
+  width: "44px",
+  height: "44px",
+  borderRadius: "50%",
+  border: "none",
+  backgroundColor: "white",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+  cursor: "pointer",
+  fontSize: "20px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+function MapButtons({
+  userLocation,
+  spots,
+}: {
+  userLocation: [number, number] | null;
+  spots: Spot[];
+}) {
+  const map = useMap();
+
+  const flyToUser = () => {
+    if (userLocation) map.flyTo(userLocation, 17);
+  };
+
+  const flyToNearest = () => {
+    if (!userLocation) return;
+    let nearest = spots[0];
+    let minDist = Infinity;
+    spots.forEach((spot) => {
+      const d = getDistance(
+        userLocation[0],
+        userLocation[1],
+        spot.lat,
+        spot.lng,
+      );
+      if (d < minDist) {
+        minDist = d;
+        nearest = spot;
+      }
+    });
+    map.flyTo([nearest.lat, nearest.lng], 17);
+  };
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        bottom: "32px",
+        right: "16px",
+        zIndex: 1000,
+        display: "flex",
+        flexDirection: "column",
+        gap: "8px",
+      }}
+    >
+      <button
+        onClick={flyToNearest}
+        style={buttonStyle}
+        title="Nearest motorcycle taxi spot"
+      >
+        🏍️
+      </button>
+      <button onClick={flyToUser} style={buttonStyle} title="My location">
+        📍
+      </button>
+    </div>
+  );
 }
 
 export default function MapView({ spots = testSpots }: Props) {
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
 
+  // const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(
+    null,
+  );
+  const [flying, setFlying] = useState(false);
   const selectedPosition: [number, number] | null = selectedSpot
     ? [selectedSpot.lat, selectedSpot.lng]
     : null;
 
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+      },
+      () => {
+        console.log("GPS unavailable");
+      },
+    );
+  }, []);
+
   return (
     <div className="map-page">
+      <div style={{ position: "relative", height: "100vh", width: "100%" }}></div>
       <MapContainer
         center={[14.0707, 100.6058]}
         zoom={15}
         style={{ height: "100vh", width: "100%" }}
+        minZoom={3}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1.0}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution="© OpenStreetMap contributors © CARTO"
         />
-        <FlyToMarker position={selectedPosition} />
+        {/* <FlyToMarker position={spot} /> */}
+        <FlyToMarker
+          position={selectedPosition}
+          onFlyStart={() => setFlying(true)}
+          onFlyEnd={() => setFlying(false)}
+        />
+        <MapButtons userLocation={userLocation} spots={spots} />
+        {userLocation && !flying && (
+          <CircleMarker
+            center={userLocation}
+            radius={8}
+            pathOptions={{
+              color: "#4A90E2",
+              fillColor: "#4A90E2",
+              fillOpacity: 1,
+            }}
+          />
+        )}
         {spots.map((spot) => (
           <Marker
             key={spot.id}
             position={[spot.lat, spot.lng]}
             eventHandlers={{
               click: () => setSelectedSpot(spot),
+              // click: () => setSelected([spot.lat, spot.lng]),
             }}
           >
             <Popup>{spot.name}</Popup>
           </Marker>
         ))}
       </MapContainer>
-
-      {selectedSpot && (
-        <QueueCard
-          spot={selectedSpot}
-          onClose={() => setSelectedSpot(null)}
-        />
-      )}
-    </div>
+      {
+        selectedSpot && (
+          <QueueCard
+            spot={selectedSpot}
+            onClose={() => setSelectedSpot(null)}
+          />
+        )
+      }
+    </div >
   );
 }
