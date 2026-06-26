@@ -3,6 +3,15 @@ html,
 #root {
   margin: 0;
   font-family: "Iosevka Charon";
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+p,
+h1,
+li,
+ul {
+  margin: 0;
 }
 
 .homepage {
@@ -21,26 +30,71 @@ html,
   opacity: 0;
 }
 
-/* .aboutpage {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-} */
+.aboutpage {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
 
 .picUs {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
+  position: static;
+  display: block;
 
-  transform: translateX(-50%);
+  width: 100%;
+  object-fit: contain;
 
-  width: 100vw;
+  /* margin: auto auto 0; */
+  /* bottom: 0; */
+  /* left: 50%; */
+  margin-top: auto;
+  margin-left: -24px;
+  margin-right: -24px;
+
+
+  /* transform: translateX(-50%); */
+
+  width: calc(100% + 48px);
   height: auto;
   max-height: 35vh;
 
-  object-fit: contain;
-  object-position: bottom center;
-
+  /* object-fit: ; */
+  /* object-position: bottom center; */
+  position: static;
   z-index: 10;
+}
+
+.textContent {
+  padding: 0;
+  margin: 0px;
+  /* max-width: 650px; */
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: left;
+  gap: 10px;
+}
+
+.aboutformat {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow-x: hidden;
+
+  min-height: 100vh;
+  padding: 115px 24px 0;
+  box-sizing: border-box;
+  margin: 10px 0;
+}
+
+.report-bug-text {
+  color: var(--orange-alt, #f46021);
+  font-family: "Iosevka Charon";
+  font-size: 20px;
+  font-style: italic;
+  font-weight: 700;
+  line-height: normal;
 }
