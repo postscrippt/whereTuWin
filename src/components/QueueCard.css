@@ -10,6 +10,8 @@
 
     background-color: #fffdf6;
     border: 2px solid #f46021;
+
+    overflow-y: auto;
 }
 
 .map-page {

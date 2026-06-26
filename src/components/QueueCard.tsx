@@ -1,7 +1,7 @@
 import "./QueueCard.css";
 import { useState, useRef } from "react";
 
-const dragStartY = useRef<number | null>(null);
+
 
 
 
@@ -19,6 +19,7 @@ export type QueueCardProps = {
     spot: Spot;
     onClose: () => void;
 };
+
 
 // function SpotCard({ spot, onClose }: Spot) {
 //     return (
@@ -39,7 +40,19 @@ export type QueueCardProps = {
 // }
 
 function SpotCard({ spot, onClose }: QueueCardProps) {
+    const dragStartY = useRef<number | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
+
+    function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
+        if (event.deltaY < 0) {
+            setIsExpanded(true);
+            return;
+        }
+
+        if (event.deltaY > 0 && event.currentTarget.scrollTop === 0) {
+            setIsExpanded(false);
+        }
+    }
 
     function handleDragStart(event: React.PointerEvent<HTMLDivElement>) {
         dragStartY.current = event.clientY;
@@ -63,7 +76,10 @@ function SpotCard({ spot, onClose }: QueueCardProps) {
     }
 
     return (
-        <div className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}>
+        <div
+            className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
+            onWheel={handleWheel}
+        >
             <div
                 className="sheet-drag-area"
                 onPointerDown={handleDragStart}
