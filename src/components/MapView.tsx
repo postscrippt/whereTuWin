@@ -148,6 +148,12 @@ export default function MapView({ spots = testSpots }: Props) {
       <MapContainer
         center={[14.0707, 100.6058]}
         zoom={15}
+        minZoom={3}
+        maxBounds={[
+          [-90, -180],
+          [90, 180],
+        ]}
+        maxBoundsViscosity={1.0}
         style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
