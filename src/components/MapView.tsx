@@ -33,6 +33,19 @@ const testSpots: Spot[] = [
   { id: 3, name: "Beside Green Canteen", lat: 14.0729, lng: 100.6014 },
 ];
 
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const R = 6371000;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLng = ((lng2 - lng1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLng / 2) *
+      Math.sin(dLng / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
 function FlyToMarker({ position }: { position: [number, number] | null }) {
   const map = useMap();
   if (position) {
@@ -41,42 +54,75 @@ function FlyToMarker({ position }: { position: [number, number] | null }) {
   return null;
 }
 
-function LocateButton({
+const buttonStyle: React.CSSProperties = {
+  width: "44px",
+  height: "44px",
+  borderRadius: "50%",
+  border: "none",
+  backgroundColor: "white",
+  boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+  cursor: "pointer",
+  fontSize: "20px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+function MapButtons({
   userLocation,
+  spots,
 }: {
   userLocation: [number, number] | null;
+  spots: Spot[];
 }) {
   const map = useMap();
 
-  const handleClick = () => {
-    if (userLocation) {
-      map.flyTo(userLocation, 17);
-    }
+  const flyToUser = () => {
+    if (userLocation) map.flyTo(userLocation, 17);
+  };
+
+  const flyToNearest = () => {
+    if (!userLocation) return;
+    let nearest = spots[0];
+    let minDist = Infinity;
+    spots.forEach((spot) => {
+      const d = getDistance(
+        userLocation[0],
+        userLocation[1],
+        spot.lat,
+        spot.lng,
+      );
+      if (d < minDist) {
+        minDist = d;
+        nearest = spot;
+      }
+    });
+    map.flyTo([nearest.lat, nearest.lng], 17);
   };
 
   return (
-    <button
-      onClick={handleClick}
+    <div
       style={{
         position: "absolute",
         bottom: "32px",
         right: "16px",
         zIndex: 1000,
-        width: "44px",
-        height: "44px",
-        borderRadius: "50%",
-        border: "none",
-        backgroundColor: "white",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-        cursor: "pointer",
-        fontSize: "20px",
         display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: "column",
+        gap: "8px",
       }}
     >
-      📍
-    </button>
+      <button
+        onClick={flyToNearest}
+        style={buttonStyle}
+        title="Nearest win spot"
+      >
+        🏍️
+      </button>
+      <button onClick={flyToUser} style={buttonStyle} title="My location">
+        📍
+      </button>
+    </div>
   );
 }
 
@@ -109,7 +155,7 @@ export default function MapView({ spots = testSpots }: Props) {
           attribution="© OpenStreetMap contributors © CARTO"
         />
         <FlyToMarker position={selected} />
-        <LocateButton userLocation={userLocation} />
+        <MapButtons userLocation={userLocation} spots={spots} />
         {userLocation && (
           <Circle
             center={userLocation}
