@@ -1,3 +1,5 @@
+import "./QueueCard.css";
+
 type Spot = {
     spot: {
         id: number;
