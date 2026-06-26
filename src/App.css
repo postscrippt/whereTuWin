@@ -67,6 +67,7 @@ ul {
 .textContent {
   padding: 0;
   margin: 0px;
+  margin-bottom: 20px;
   /* max-width: 650px; */
 
   box-sizing: border-box;
@@ -87,7 +88,7 @@ ul {
   min-height: 100vh;
   padding: 115px 24px 0;
   box-sizing: border-box;
-  margin: 10px 0;
+  margin: 10px 0 0 0;
 }
 
 .report-bug-text {
