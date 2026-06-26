@@ -41,6 +41,45 @@ function FlyToMarker({ position }: { position: [number, number] | null }) {
   return null;
 }
 
+function LocateButton({
+  userLocation,
+}: {
+  userLocation: [number, number] | null;
+}) {
+  const map = useMap();
+
+  const handleClick = () => {
+    if (userLocation) {
+      map.flyTo(userLocation, 17);
+    }
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      style={{
+        position: "absolute",
+        bottom: "32px",
+        right: "16px",
+        zIndex: 1000,
+        width: "44px",
+        height: "44px",
+        borderRadius: "50%",
+        border: "none",
+        backgroundColor: "white",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+        cursor: "pointer",
+        fontSize: "20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      📍
+    </button>
+  );
+}
+
 export default function MapView({ spots = testSpots }: Props) {
   const [selected, setSelected] = useState<[number, number] | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
@@ -59,38 +98,41 @@ export default function MapView({ spots = testSpots }: Props) {
   }, []);
 
   return (
-    <MapContainer
-      center={[14.0707, 100.6058]}
-      zoom={15}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        attribution="© OpenStreetMap contributors © CARTO"
-      />
-      <FlyToMarker position={selected} />
-      {userLocation && (
-        <Circle
-          center={userLocation}
-          radius={8}
-          pathOptions={{
-            color: "#4A90E2",
-            fillColor: "#4A90E2",
-            fillOpacity: 1,
-          }}
+    <div style={{ position: "relative", height: "100vh", width: "100%" }}>
+      <MapContainer
+        center={[14.0707, 100.6058]}
+        zoom={15}
+        style={{ height: "100%", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          attribution="© OpenStreetMap contributors © CARTO"
         />
-      )}
-      {spots.map((spot) => (
-        <Marker
-          key={spot.id}
-          position={[spot.lat, spot.lng]}
-          eventHandlers={{
-            click: () => setSelected([spot.lat, spot.lng]),
-          }}
-        >
-          <Popup>{spot.name}</Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+        <FlyToMarker position={selected} />
+        <LocateButton userLocation={userLocation} />
+        {userLocation && (
+          <Circle
+            center={userLocation}
+            radius={8}
+            pathOptions={{
+              color: "#4A90E2",
+              fillColor: "#4A90E2",
+              fillOpacity: 1,
+            }}
+          />
+        )}
+        {spots.map((spot) => (
+          <Marker
+            key={spot.id}
+            position={[spot.lat, spot.lng]}
+            eventHandlers={{
+              click: () => setSelected([spot.lat, spot.lng]),
+            }}
+          >
+            <Popup>{spot.name}</Popup>
+          </Marker>
+        ))}
+      </MapContainer>
+    </div>
   );
 }
