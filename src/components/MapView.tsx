@@ -176,59 +176,60 @@ export default function MapView({ spots = testSpots }: Props) {
 
   return (
     <div className="map-page">
-      <div style={{ position: "relative", height: "100vh", width: "100%" }}></div>
-      <MapContainer
-        center={[14.0707, 100.6058]}
-        zoom={15}
-        style={{ height: "100vh", width: "100%" }}
-        minZoom={3}
-        maxBounds={[
-          [-90, -180],
-          [90, 180],
-        ]}
-        maxBoundsViscosity={1.0}
-      >
-        <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-          attribution="© OpenStreetMap contributors © CARTO"
-        />
-        {/* <FlyToMarker position={spot} /> */}
-        <FlyToMarker
-          position={selectedPosition}
-          onFlyStart={() => setFlying(true)}
-          onFlyEnd={() => setFlying(false)}
-        />
-        <MapButtons
-          userLocation={userLocation}
-          spots={spots}
-          onFlyStart={() => setFlying(true)}
-          onFlyEnd={() => setFlying(false)}
-        />
-        {userLocation && !flying && (
-          <CircleMarker
-            center={userLocation}
-            radius={8}
-            pathOptions={{
-              color: "#4A90E2",
-              fillColor: "#4A90E2",
-              fillOpacity: 1,
-            }}
+      <div style={{ position: "relative", height: "100vh", width: "100%" }}>
+        <MapContainer
+          center={[14.0707, 100.6058]}
+          zoom={15}
+          style={{ height: "100vh", width: "100%" }}
+          minZoom={3}
+          maxBounds={[
+            [-90, -180],
+            [90, 180],
+          ]}
+          maxBoundsViscosity={1.0}
+        >
+          <TileLayer
+            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            attribution="© OpenStreetMap contributors © CARTO"
           />
-        )}
-        {spots.map((spot) => (
-          <Marker
-            key={spot.id}
-            position={[spot.lat, spot.lng]}
-            eventHandlers={{
-              // click: () => setSelected([spot.lat, spot.lng]),
-              click: () => setSelectedSpot(spot),
-              // click: () => setSelected([spot.lat, spot.lng]),
-            }}
-          >
-            <Popup>{spot.name}</Popup>
-          </Marker>
-        ))}
-      </MapContainer>
+          {/* <FlyToMarker position={spot} /> */}
+          <FlyToMarker
+            position={selectedPosition}
+            onFlyStart={() => setFlying(true)}
+            onFlyEnd={() => setFlying(false)}
+          />
+          <MapButtons
+            userLocation={userLocation}
+            spots={spots}
+            onFlyStart={() => setFlying(true)}
+            onFlyEnd={() => setFlying(false)}
+          />
+          {userLocation && !flying && (
+            <CircleMarker
+              center={userLocation}
+              radius={8}
+              pathOptions={{
+                color: "#4A90E2",
+                fillColor: "#4A90E2",
+                fillOpacity: 1,
+              }}
+            />
+          )}
+          {spots.map((spot) => (
+            <Marker
+              key={spot.id}
+              position={[spot.lat, spot.lng]}
+              eventHandlers={{
+                // click: () => setSelected([spot.lat, spot.lng]),
+                click: () => setSelectedSpot(spot),
+                // click: () => setSelected([spot.lat, spot.lng]),
+              }}
+            >
+              <Popup>{spot.name}</Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
       {
         selectedSpot && (
           <QueueCard
