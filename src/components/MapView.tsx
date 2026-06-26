@@ -3,7 +3,6 @@ import {
   MapContainer,
   TileLayer,
   Marker,
-  Popup,
   useMap,
   CircleMarker,
 } from "react-leaflet";
@@ -24,8 +23,6 @@ L.Icon.Default.mergeOptions({
 //   lat: number;
 //   lng: number;
 // };
-
-
 
 type Props = {
   spots?: Spot[];
@@ -232,7 +229,7 @@ export default function MapView({ spots = queueSpots }: Props) {
                 // click: () => setSelected([spot.lat, spot.lng]),
               }}
             >
-              <Popup>{spot.name}</Popup>
+              {/* <Popup>{spot.name}</Popup> */}
             </Marker>
           ))}
         </MapContainer>
