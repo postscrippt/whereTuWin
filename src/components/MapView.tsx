@@ -1,5 +1,12 @@
-import { useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
+import { useState, useEffect } from "react";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  useMap,
+  Circle,
+} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
@@ -36,6 +43,20 @@ function FlyToMarker({ position }: { position: [number, number] | null }) {
 
 export default function MapView({ spots = testSpots }: Props) {
   const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(
+    null,
+  );
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+      },
+      () => {
+        console.log("GPS unavailable");
+      },
+    );
+  }, []);
 
   return (
     <MapContainer
@@ -48,6 +69,17 @@ export default function MapView({ spots = testSpots }: Props) {
         attribution="© OpenStreetMap contributors © CARTO"
       />
       <FlyToMarker position={selected} />
+      {userLocation && (
+        <Circle
+          center={userLocation}
+          radius={8}
+          pathOptions={{
+            color: "#4A90E2",
+            fillColor: "#4A90E2",
+            fillOpacity: 1,
+          }}
+        />
+      )}
       {spots.map((spot) => (
         <Marker
           key={spot.id}
