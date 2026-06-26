@@ -220,7 +220,7 @@ export default function MapView({ spots = testSpots }: Props) {
             key={spot.id}
             position={[spot.lat, spot.lng]}
             eventHandlers={{
-              click: () => setSelected([spot.lat, spot.lng]),
+              // click: () => setSelected([spot.lat, spot.lng]),
               click: () => setSelectedSpot(spot),
               // click: () => setSelected([spot.lat, spot.lng]),
             }}
@@ -237,7 +237,6 @@ export default function MapView({ spots = testSpots }: Props) {
           />
         )
       }
-    </div >
     </div >
   );
 }
