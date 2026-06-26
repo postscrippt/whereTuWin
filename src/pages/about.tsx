@@ -19,7 +19,8 @@ function about() {
                     <p>Spots missing or wrong?
                         Mail us at WhereTUWin@gmail.com
                         or use {" "}
-                        <span className="report-bug-text">report bug</span>
+                        <a className="report-bug-text" href="https://youtu.be/dQw4w9WgXcQ?si=NezRXzLx2lYlZ5Bb" target="_blank"
+                            rel="noopener noreferrer">report bug</a>
                         {" "} to report it through Google forms.</p>
                     <h1>How to use</h1>
                     <ul><li>We display the nearest Win spot on a map.

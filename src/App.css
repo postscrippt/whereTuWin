@@ -92,10 +92,16 @@ ul {
 }
 
 .report-bug-text {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+
   color: var(--orange-alt, #f46021);
   font-family: "Iosevka Charon";
   font-size: 20px;
   font-style: italic;
   font-weight: 700;
   line-height: normal;
+
+
 }
