@@ -154,6 +154,7 @@ export default function MapView({ spots = testSpots }: Props) {
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
 
   // const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [selected, setSelected] = useState<[number, number] | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
@@ -219,6 +220,7 @@ export default function MapView({ spots = testSpots }: Props) {
             key={spot.id}
             position={[spot.lat, spot.lng]}
             eventHandlers={{
+              click: () => setSelected([spot.lat, spot.lng]),
               click: () => setSelectedSpot(spot),
               // click: () => setSelected([spot.lat, spot.lng]),
             }}
@@ -235,6 +237,7 @@ export default function MapView({ spots = testSpots }: Props) {
           />
         )
       }
+    </div >
     </div >
   );
 }
