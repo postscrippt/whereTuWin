@@ -31,26 +31,34 @@ html,
 }
 
 .picUs {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
+  position: static;
+  display: block;
 
-  transform: translateX(-50%);
+  width: 100%;
+  object-fit: contain;
+
+  /* margin: auto auto 0; */
+  /* bottom: 0; */
+  /* left: 50%; */
+  margin-top: auto;
+  margin-left: auto;
+  margin-right: auto;
+
+
+  /* transform: translateX(-50%); */
 
   width: 100vw;
   height: auto;
   max-height: 35vh;
 
   /* object-fit: ; */
-  object-position: bottom center;
-
+  /* object-position: bottom center; */
+  position: static;
   z-index: 10;
 }
 
 .textContent {
-  min-height: 100vh;
   padding: 0 28px;
-  padding-top: 174px;
   /* max-width: 650px; */
 
   box-sizing: border-box;
@@ -66,10 +74,9 @@ html,
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
   overflow-x: hidden;
 
   min-height: 100vh;
-  padding: 174px 24px 80px;
+  padding: 115px 24px 0;
   box-sizing: border-box;
 }
