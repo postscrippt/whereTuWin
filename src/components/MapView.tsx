@@ -9,6 +9,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import QueueCard from "./QueueCard";
 
 L.Icon.Default.mergeOptions({
   iconUrl: "/marker-icon.png",
@@ -40,9 +41,9 @@ function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   const a =
     Math.sin(dLat / 2) * Math.sin(dLat / 2) +
     Math.cos((lat1 * Math.PI) / 180) *
-      Math.cos((lat2 * Math.PI) / 180) *
-      Math.sin(dLng / 2) *
-      Math.sin(dLng / 2);
+    Math.cos((lat2 * Math.PI) / 180) *
+    Math.sin(dLng / 2) *
+    Math.sin(dLng / 2);
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
@@ -150,11 +151,17 @@ function MapButtons({
 }
 
 export default function MapView({ spots = testSpots }: Props) {
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+
+  // const [selected, setSelected] = useState<[number, number] | null>(null);
+  // const [selected, setSelected] = useState<[number, number] | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
   const [flying, setFlying] = useState(false);
+  const selectedPosition: [number, number] | null = selectedSpot
+    ? [selectedSpot.lat, selectedSpot.lng]
+    : null;
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -168,24 +175,26 @@ export default function MapView({ spots = testSpots }: Props) {
   }, []);
 
   return (
-    <div style={{ position: "relative", height: "100vh", width: "100%" }}>
+    <div className="map-page">
+      <div style={{ position: "relative", height: "100vh", width: "100%" }}></div>
       <MapContainer
         center={[14.0707, 100.6058]}
         zoom={15}
+        style={{ height: "100vh", width: "100%" }}
         minZoom={3}
         maxBounds={[
           [-90, -180],
           [90, 180],
         ]}
         maxBoundsViscosity={1.0}
-        style={{ height: "100%", width: "100%" }}
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
           attribution="© OpenStreetMap contributors © CARTO"
         />
+        {/* <FlyToMarker position={spot} /> */}
         <FlyToMarker
-          position={selected}
+          position={selectedPosition}
           onFlyStart={() => setFlying(true)}
           onFlyEnd={() => setFlying(false)}
         />
@@ -211,13 +220,23 @@ export default function MapView({ spots = testSpots }: Props) {
             key={spot.id}
             position={[spot.lat, spot.lng]}
             eventHandlers={{
-              click: () => setSelected([spot.lat, spot.lng]),
+              // click: () => setSelected([spot.lat, spot.lng]),
+              click: () => setSelectedSpot(spot),
+              // click: () => setSelected([spot.lat, spot.lng]),
             }}
           >
             <Popup>{spot.name}</Popup>
           </Marker>
         ))}
       </MapContainer>
-    </div>
+      {
+        selectedSpot && (
+          <QueueCard
+            spot={selectedSpot}
+            onClose={() => setSelectedSpot(null)}
+          />
+        )
+      }
+    </div >
   );
 }
