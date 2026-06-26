@@ -45,12 +45,12 @@ function SpotCard({ spot, onClose }: QueueCardProps) {
 
     function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
         if (event.deltaY < 0) {
-            setIsExpanded(true);
+            setIsExpanded(false);
             return;
         }
 
         if (event.deltaY > 0 && event.currentTarget.scrollTop === 0) {
-            setIsExpanded(false);
+            setIsExpanded(true);
         }
     }
 
