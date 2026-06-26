@@ -65,7 +65,7 @@
     }
 
     .spot-card.collapsed {
-        transform: translateY(calc(100% - 110px));
+        transform: translateY(calc(100% - 140px));
     }
 
     .spot-card.expanded {
