@@ -1,0 +1,20 @@
+.spot-card {
+    position: absolute;
+    z-index: 1500;
+
+    top: 140px;
+    right: 32px;
+
+    width: 320px;
+    padding: 20px;
+
+    background-color: #fffdf6;
+    border: 2px solid #f46021;
+    border-radius: 16px;
+}
+
+.map-page {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}

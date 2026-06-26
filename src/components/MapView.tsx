@@ -57,27 +57,27 @@ function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
 
-function FlyToMarker({
-  position,
-  onFlyStart,
-  onFlyEnd,
-}: {
-  position: [number, number] | null;
-  onFlyStart: () => void;
-  onFlyEnd: () => void;
-}) {
-  const map = useMap();
+// function FlyToMarker({
+//   position,
+//   onFlyStart,
+//   onFlyEnd,
+// }: {
+//   position: [number, number] | null;
+//   onFlyStart: () => void;
+//   onFlyEnd: () => void;
+// }) {
+//   const map = useMap();
 
-  useEffect(() => {
-    if (position) {
-      onFlyStart();
-      map.flyTo(position, 17);
-      map.once("moveend", onFlyEnd);
-    }
-  }, [position]);
+//   useEffect(() => {
+//     if (position) {
+//       onFlyStart();
+//       map.flyTo(position, 17);
+//       map.once("moveend", onFlyEnd);
+//     }
+//   }, [position]);
 
-  return null;
-}
+//   return null;
+// }
 
 const buttonStyle: React.CSSProperties = {
   width: "44px",
@@ -163,9 +163,9 @@ function MapButtons({
 export default function MapView({ spots = testSpots }: Props) {
   // const [selected, setSelected] = useState<[number, number] | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
-  const selectedPosition: [number, number] | null = selectedSpot
-    ? [selectedSpot.lat, selectedSpot.lng]
-    : null;
+  // const selectedPosition: [number, number] | null = selectedSpot
+  //   ? [selectedSpot.lat, selectedSpot.lng]
+  //   : null;
 
   // const [selected, setSelected] = useState<[number, number] | null>(null);
   // const [selected, setSelected] = useState<[number, number] | null>(null);
@@ -207,11 +207,11 @@ export default function MapView({ spots = testSpots }: Props) {
             attribution="© OpenStreetMap contributors © CARTO"
           />
           {/* <FlyToMarker position={spot} /> */}
-          <FlyToMarker
+          {/* <FlyToMarker
             position={selectedPosition}
             onFlyStart={() => setFlying(true)}
             onFlyEnd={() => setFlying(false)}
-          />
+          /> */}
           <MapButtons
             userLocation={userLocation}
             spots={spots}
