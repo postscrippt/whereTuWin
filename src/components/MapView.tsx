@@ -17,9 +17,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: "/marker-shadow.png",
 });
 
+// type Spot = {
+//   id: number;
+//   name: string;
+//   lat: number;
+//   lng: number;
+// };
+
 type Spot = {
   id: number;
   name: string;
+  area?: string;
+  landmark?: string;
+  hours?: string;
   lat: number;
   lng: number;
 };
@@ -151,7 +161,11 @@ function MapButtons({
 }
 
 export default function MapView({ spots = testSpots }: Props) {
+  const [selected, setSelected] = useState<[number, number] | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+  const selectedPosition: [number, number] | null = selectedSpot
+    ? [selectedSpot.lat, selectedSpot.lng]
+    : null;
 
   // const [selected, setSelected] = useState<[number, number] | null>(null);
   // const [selected, setSelected] = useState<[number, number] | null>(null);
@@ -159,9 +173,9 @@ export default function MapView({ spots = testSpots }: Props) {
     null,
   );
   const [flying, setFlying] = useState(false);
-  const selectedPosition: [number, number] | null = selectedSpot
-    ? [selectedSpot.lat, selectedSpot.lng]
-    : null;
+  // const selectedPosition: [number, number] | null = selectedSpot
+  //   ? [selectedSpot.lat, selectedSpot.lng]
+  //   : null;
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -180,13 +194,13 @@ export default function MapView({ spots = testSpots }: Props) {
         <MapContainer
           center={[14.0707, 100.6058]}
           zoom={15}
-          style={{ height: "100vh", width: "100%" }}
           minZoom={3}
           maxBounds={[
             [-90, -180],
             [90, 180],
           ]}
           maxBoundsViscosity={1.0}
+          style={{ height: "100%", width: "100%" }}
         >
           <TileLayer
             url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
