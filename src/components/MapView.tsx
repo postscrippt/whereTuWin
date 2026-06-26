@@ -161,7 +161,7 @@ function MapButtons({
 }
 
 export default function MapView({ spots = testSpots }: Props) {
-  const [selected, setSelected] = useState<[number, number] | null>(null);
+  // const [selected, setSelected] = useState<[number, number] | null>(null);
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
   const selectedPosition: [number, number] | null = selectedSpot
     ? [selectedSpot.lat, selectedSpot.lng]
