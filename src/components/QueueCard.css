@@ -71,7 +71,8 @@
 
         width: 100%;
         min-height: 10vh;
-        max-height: 35vh;
+        max-height: calc(100vh - 90px);
+        height: auto;
 
         overflow-y: auto;
 
