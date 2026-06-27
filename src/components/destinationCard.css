@@ -6,6 +6,8 @@
     border-radius: 10px;
     background: #FFE9A0;
     margin-bottom: 8px;
+
+
 }
 
 .landmark-text {
@@ -18,4 +20,13 @@
     font-style: normal;
     font-weight: 500;
     line-height: normal;
+}
+
+.innerBox {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrow {
+    margin-right: 19px;
 }

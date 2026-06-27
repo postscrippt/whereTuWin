@@ -1,4 +1,5 @@
 import "./destinationCard.css";
+import Arrow from "../assets/line-md_arrow-up.svg";
 
 type DestinationCardProps = {
     landmark?: string[];
@@ -10,7 +11,10 @@ function destinationCard({ landmark }: DestinationCardProps) {
             {landmark &&
                 landmark.map((landmark, index) => (
                     <div className="box" key={`${landmark}-${index}`}>
-                        <p className="landmark-text">{landmark}</p>
+                        <div className="innerBox">
+                            <p className="landmark-text">{landmark}</p>
+                            <img className="arrow" src={Arrow} />
+                        </div>
                     </div>
                 ))}
         </div>
