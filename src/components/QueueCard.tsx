@@ -1,12 +1,13 @@
 import "./QueueCard.css";
 import { useState, useRef } from "react";
 import Navigate from "../assets/navigate.svg";
+import Destination from "./destinationCard";
 
 export type Spot = {
     id: number;
     name: string;
     area?: string;
-    landmark?: string;
+    landmark?: string[];
     hours?: string;
     lat: number;
     lng: number;
@@ -172,7 +173,8 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                 <div className="bottom">
                     {/* {spot.area && <p>{spot.area}</p>} */}
                     <h2>Nearby Destinations</h2>
-                    {spot.landmark && <p>Nearby: {spot.landmark}</p>}
+                    {/* {spot.landmark && <p>{spot.landmark}</p>} */}
+                    <Destination />
                 </div>
             </div >
 

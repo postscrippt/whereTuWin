@@ -1,0 +1,8 @@
+.box {
+    width: 359px;
+    height: 65px;
+    flex-shrink: 0;
+
+    border-radius: 10px;
+    background: #FFE9A0;
+}

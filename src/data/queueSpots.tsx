@@ -2,7 +2,7 @@ export type Spot = {
     id: number;
     name: string;
     area?: string;
-    landmark?: string;
+    landmark?: string[];
     hours?: string;
     lat: number;
     lng: number;
@@ -15,7 +15,7 @@ export const queueSpots: Spot[] = [
         id: 1,
         name: "TU Main Gate Win",
         area: "Thammasat Rangsit",
-        landmark: "Main Gate",
+        landmark: ["Main Gate"],
         hours: "6:00 AM - 9:00 PM",
         lat: 14.0687,
         lng: 100.6031,
