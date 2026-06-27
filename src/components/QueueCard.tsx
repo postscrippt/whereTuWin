@@ -1,9 +1,6 @@
 import "./QueueCard.css";
 import { useState, useRef } from "react";
-
-
-
-
+import Navigate from "../assets/navigate.svg";
 
 export type Spot = {
     id: number;
@@ -13,10 +10,13 @@ export type Spot = {
     hours?: string;
     lat: number;
     lng: number;
+    image?: string;
+    nav?: string;
 };
 
 export type QueueCardProps = {
     spot: Spot;
+    distance?: number;
     onClose: () => void;
 };
 
@@ -39,7 +39,7 @@ export type QueueCardProps = {
 //     );
 // }
 
-function SpotCard({ spot, onClose }: QueueCardProps) {
+function SpotCard({ spot, distance }: QueueCardProps) {
     const dragStartY = useRef<number | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -75,6 +75,11 @@ function SpotCard({ spot, onClose }: QueueCardProps) {
         dragStartY.current = null;
     }
 
+    function openNavigation() {
+        if (!spot.nav) return;
+        window.open(spot.nav, "_blank", "noopener,noreferrer");
+    }
+
     return (
         <div
             className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
@@ -88,16 +93,37 @@ function SpotCard({ spot, onClose }: QueueCardProps) {
                 <div className="sheet-handle" />
             </div>
 
-            <button className="spot-card-close" onClick={onClose}>
+            {/* <button className="spot-card-close" onClick={onClose}>
                 ×
-            </button>
+            </button> */}
+            <div className="card">
+                <div className="title">
+                    <div className="left-side">
+                        <h2>{spot.name}</h2>
+                        {distance !== undefined && (
+                            <p className="distance">
+                                Distance:{" "}
+                                {distance < 1000
+                                    ? `${Math.round(distance)} m`
+                                    : `${(distance / 1000).toFixed(1)} km`}
+                            </p>
+                        )}
+                        {spot.hours && <p>Hours: {spot.hours}</p>}
+                    </div>
+                    <button className="navigate-button" onClick={openNavigation}
+                        disabled={!spot.nav}
+                        aria-label={`Navigate to ${spot.name}`}><img src={Navigate} /></button>
+                </div>
+                <div>
+                    {spot.image && <img src={spot.image} className="location-img" />}
+                </div>
+                <div className="bottom">
+                    {/* {spot.area && <p>{spot.area}</p>} */}
+                    <h2>Nearby Destinations</h2>
+                    {spot.landmark && <p>Nearby: {spot.landmark}</p>}
+                </div>
+            </div>
 
-            <h2>{spot.name}</h2>
-            {spot.area && <p>{spot.area}</p>}
-            {spot.landmark && <p>Nearby: {spot.landmark}</p>}
-            {spot.hours && <p>Hours: {spot.hours}</p>}
-
-            <button className="navigate-button">Navigate</button>
         </div>
     );
 }
