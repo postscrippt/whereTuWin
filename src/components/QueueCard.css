@@ -97,6 +97,17 @@
 
         z-index: 2000;
         transition: transform 0.25s ease;
+
+    }
+
+    cardRef.current.style.transform=`translateY($ {
+            nextY
+        }
+
+        px)`;
+
+    .spot-card.dragging {
+        transition: none;
     }
 
     .spot-card.collapsed {
