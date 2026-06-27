@@ -170,7 +170,7 @@ export default function MapView({ spots = queueSpots }: Props) {
 
   return (
     <div className="map-page">
-      <div style={{ position: "relative", height: "100vh", width: "100%" }}>
+      <div style={{ position: "relative", height: "100dvh", width: "100%" }}>
         <MapContainer
           center={[14.0707, 100.6058]}
           zoom={15}
