@@ -10,6 +10,7 @@ function findMore() {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+                marginTop: "8px",
 
             }}
         >

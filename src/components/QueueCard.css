@@ -18,7 +18,7 @@
 .map-page {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
 }
 
 .navigate-button {
@@ -82,7 +82,7 @@
         width: 100%;
         height: auto;
         /* sizes to content */
-        max-height: calc(100dvh - 24px);
+        max-height: calc(100dvh - 90px);
         /* but never taller than screen */
         padding: 0 24px 32px;
         box-sizing: border-box;
@@ -190,5 +190,11 @@
         flex-direction: column;
         padding-bottom: 32px;
         /* breathing room at the bottom */
+    }
+
+    .inBottom {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 }

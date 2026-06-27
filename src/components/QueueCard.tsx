@@ -115,11 +115,13 @@ function SpotCard({ spot, distance, onClose }: QueueCardProps) {
                 </div>
                 <div className="bottom">
                     <h2>Nearby Destinations</h2>
-                    <div className="destinations">
-                        {spot.landmark && <Destination landmark={spot.landmark} />}
+                    <div className="inBottom">
+                        <div className="destinations">
+                            {spot.landmark && <Destination landmark={spot.landmark} />}
 
+                        </div>
+                        <FindMore />
                     </div>
-                    <FindMore />
                 </div>
             </div>
         </div>
