@@ -41,7 +41,7 @@ export type QueueCardProps = {
 
 function SpotCard({ spot, distance }: QueueCardProps) {
     const [isExpanded, setIsExpanded] = useState(false);
-    const [dragY, setDragY] = useState<number | null>(null);
+    // const [dragY, setDragY] = useState<number | null>(null);
 
     const cardRef = useRef<HTMLDivElement | null>(null);
     const startY = useRef(0);
@@ -89,6 +89,7 @@ function SpotCard({ spot, distance }: QueueCardProps) {
 
     function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
         if (!isDragging.current) return;
+        if (!cardRef.current) return;
 
         const collapsedY = getCollapsedY();
         const deltaY = event.clientY - startY.current;
@@ -99,11 +100,13 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         );
 
         currentY.current = nextY;
-        setDragY(nextY);
+        cardRef.current.style.transform = `translateY(${nextY}px)`;
+
     }
 
     function handlePointerUp() {
         if (!isDragging.current) return;
+        if (!cardRef.current) return;
 
         isDragging.current = false;
 
@@ -114,9 +117,8 @@ function SpotCard({ spot, distance }: QueueCardProps) {
 
         const shouldExpand = finalY < collapsedY / 2;
 
+        cardRef.current.style.transform = "";
         setIsExpanded(shouldExpand);
-        setDragY(null);
-        currentY.current = null;
     }
 
     function openNavigation() {
@@ -129,11 +131,11 @@ function SpotCard({ spot, distance }: QueueCardProps) {
             ref={cardRef}
             className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
             onWheel={handleWheel}
-            style={
-                dragY !== null
-                    ? { transform: `translateY(${dragY}px)` }
-                    : undefined
-            }
+            // style={
+            //     dragY !== null
+            //         ? { transform: `translateY(${dragY}px)` }
+            //         : undefined
+            // }
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}

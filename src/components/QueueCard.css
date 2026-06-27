@@ -97,6 +97,12 @@
 
         z-index: 2000;
         transition: transform 0.25s ease;
+
+    }
+
+
+    .spot-card.dragging {
+        transition: none;
     }
 
     .spot-card.collapsed {
