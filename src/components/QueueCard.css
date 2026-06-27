@@ -100,11 +100,6 @@
 
     }
 
-    cardRef.current.style.transform=`translateY($ {
-            nextY
-        }
-
-        px)`;
 
     .spot-card.dragging {
         transition: none;
