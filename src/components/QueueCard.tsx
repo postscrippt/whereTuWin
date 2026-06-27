@@ -2,10 +2,6 @@ import "./QueueCard.css";
 import { useState, useRef } from "react";
 import Navigate from "../assets/navigate.svg";
 
-
-
-
-
 export type Spot = {
     id: number;
     name: string;
@@ -15,6 +11,7 @@ export type Spot = {
     lat: number;
     lng: number;
     image?: string;
+    nav?: string;
 };
 
 export type QueueCardProps = {
@@ -78,6 +75,11 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         dragStartY.current = null;
     }
 
+    function openNavigation() {
+        if (!spot.nav) return;
+        window.open(spot.nav, "_blank", "noopener,noreferrer");
+    }
+
     return (
         <div
             className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
@@ -108,13 +110,16 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                         )}
                         {spot.hours && <p>Hours: {spot.hours}</p>}
                     </div>
-                    <button className="navigate-button"><img src={Navigate} /></button>
+                    <button className="navigate-button" onClick={openNavigation}
+                        disabled={!spot.nav}
+                        aria-label={`Navigate to ${spot.name}`}><img src={Navigate} /></button>
                 </div>
                 <div>
-                    <img src={spot.image} className="location-img" />
+                    {spot.image && <img src={spot.image} className="location-img" />}
                 </div>
                 <div className="bottom">
-                    {spot.area && <p>{spot.area}</p>}
+                    {/* {spot.area && <p>{spot.area}</p>} */}
+                    <h2>Nearby Destinations</h2>
                     {spot.landmark && <p>Nearby: {spot.landmark}</p>}
                 </div>
             </div>
