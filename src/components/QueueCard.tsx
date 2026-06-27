@@ -2,6 +2,7 @@ import "./QueueCard.css";
 import { useState, useRef } from "react";
 import Navigate from "../assets/navigate.svg";
 import Destination from "./destinationCard";
+import FindMore from "./findmore";
 
 export type Spot = {
     id: number;
@@ -116,7 +117,9 @@ function SpotCard({ spot, distance, onClose }: QueueCardProps) {
                     <h2>Nearby Destinations</h2>
                     <div className="destinations">
                         {spot.landmark && <Destination landmark={spot.landmark} />}
+
                     </div>
+                    <FindMore />
                 </div>
             </div>
         </div>
