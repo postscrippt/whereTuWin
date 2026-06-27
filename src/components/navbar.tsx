@@ -15,7 +15,7 @@ const navLinks = [
   { name: "Contact Us", path: "/contact-us" },
   {
     name: "Report Bug",
-    href: "https://youtu.be/dQw4w9WgXcQ?si=NezRXzLx2lYlZ5Bb",
+    href: "https://forms.gle/VJU39ASSyfLjUWPG9",
   },
 ];
 
