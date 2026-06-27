@@ -21,36 +21,13 @@ export type QueueCardProps = {
     onClose: () => void;
 };
 
-
-// function SpotCard({ spot, onClose }: Spot) {
-//     return (
-//         <div className="spot-card">
-//             <button className="spot-card-close" onClick={onClose}>
-//                 ×
-//             </button>
-
-//             <h2>{spot.name}</h2>
-
-//             {spot.area && <p>{spot.area}</p>}
-//             {spot.landmark && <p>Nearby: {spot.landmark}</p>}
-//             {spot.hours && <p>Hours: {spot.hours}</p>}
-
-//             <button className="navigate-button">Navigate</button>
-//         </div>
-//     );
-// }
-
 function SpotCard({ spot, distance }: QueueCardProps) {
-    const [isExpanded, setIsExpanded] = useState(false);
-    // const [dragY, setDragY] = useState<number | null>(null);
+    const SNAPS = ['snap-peek', 'snap-mid', 'snap-expanded'];
 
-    const cardRef = useRef<HTMLDivElement | null>(null);
-    const startY = useRef(0);
-    const startTranslate = useRef(0);
-    const isDragging = useRef(false);
-    const currentY = useRef<number | null>(null);
-
-    const peekHeight = 110;
+    const cardRef = useRef<HTMLDivElement>(null);
+    const [snap, setSnap] = useState('snap-peek');
+    const dragStart = useRef<number | null>(null);
+    const snapAtStart = useRef<string | null>(null);
 
     function shouldIgnoreDrag(target: EventTarget | null) {
         return (
@@ -59,67 +36,33 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         );
     }
 
-    function getCollapsedY() {
-        if (!cardRef.current) return 0;
-        return cardRef.current.getBoundingClientRect().height - peekHeight;
+    function onPointerDown(e: React.PointerEvent) {
+        if (shouldIgnoreDrag(e.target)) return;
+        dragStart.current = e.clientY;
+        snapAtStart.current = snap;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        cardRef.current?.classList.add('dragging');
     }
 
-    function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
-        if (event.deltaY < 0) {
-            setIsExpanded(false);
-            return;
-        }
-
-        if (event.deltaY > 0 && event.currentTarget.scrollTop === 0) {
-            setIsExpanded(true);
-        }
+    function onPointerMove(e: React.PointerEvent) {
+        if (dragStart.current === null) return;
+        const dy = e.clientY - dragStart.current;
+        const base = snapAtStart.current === 'snap-expanded' ? '0px'
+            : snapAtStart.current === 'snap-mid' ? '40%'
+                : 'calc(100% - 140px)';
+        cardRef.current!.style.transform = `translateY(calc(${base} + ${dy}px))`;
     }
 
-    function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
-        if (shouldIgnoreDrag(event.target)) return;
+    function onPointerUp(e: React.PointerEvent) {
+        const dy = e.clientY - (dragStart.current ?? e.clientY);
+        dragStart.current = null;
+        cardRef.current?.classList.remove('dragging');
+        cardRef.current!.style.transform = '';
 
-        const collapsedY = getCollapsedY();
-
-        isDragging.current = true;
-        startY.current = event.clientY;
-        startTranslate.current = isExpanded ? 0 : collapsedY;
-        currentY.current = startTranslate.current;
-
-        event.currentTarget.setPointerCapture(event.pointerId);
-    }
-
-    function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-        if (!isDragging.current) return;
-        if (!cardRef.current) return;
-
-        const collapsedY = getCollapsedY();
-        const deltaY = event.clientY - startY.current;
-
-        const nextY = Math.min(
-            Math.max(startTranslate.current + deltaY, 0),
-            collapsedY,
-        );
-
-        currentY.current = nextY;
-        cardRef.current.style.transform = `translateY(${nextY}px)`;
-
-    }
-
-    function handlePointerUp() {
-        if (!isDragging.current) return;
-        if (!cardRef.current) return;
-
-        isDragging.current = false;
-
-        const collapsedY = getCollapsedY();
-        const finalY = currentY.current;
-
-        if (finalY === null) return;
-
-        const shouldExpand = finalY < collapsedY / 2;
-
-        cardRef.current.style.transform = "";
-        setIsExpanded(shouldExpand);
+        const idx = SNAPS.indexOf(snapAtStart.current ?? '');
+        if (dy < -60 && idx < 2) setSnap(SNAPS[idx + 1]);
+        else if (dy > 60 && idx > 0) setSnap(SNAPS[idx - 1]);
+        else setSnap(snapAtStart.current!);
     }
 
     function openNavigation() {
@@ -128,27 +71,16 @@ function SpotCard({ spot, distance }: QueueCardProps) {
     }
 
     return (
-        <div
-            ref={cardRef}
-            className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
-            onWheel={handleWheel}
-            // style={
-            //     dragY !== null
-            //         ? { transform: `translateY(${dragY}px)` }
-            //         : undefined
-            // }
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-        >
-            <div className="sheet-drag-area">
+        <div ref={cardRef} className={`spot-card ${snap}`}>
+            <div
+                className="sheet-drag-area"
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={onPointerUp}
+            >
                 <div className="sheet-handle" />
-            </div >
+            </div>
 
-            {/* <button className="spot-card-close" onClick={onClose}>
-                ×
-            </button> */}
             <div className="card">
                 <div className="title">
                     <div className="left-side">
@@ -163,27 +95,27 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                         )}
                         {spot.hours && <p>Hours: {spot.hours}</p>}
                     </div>
-                    <button className="navigate-button" onClick={openNavigation}
+                    <button
+                        className="navigate-button"
+                        onClick={openNavigation}
                         disabled={!spot.nav}
-                        aria-label={`Navigate to ${spot.name}`}><img src={Navigate} /></button>
+                        aria-label={`Navigate to ${spot.name}`}
+                    >
+                        <img src={Navigate} />
+                    </button>
                 </div>
                 <div>
                     {spot.image && <img src={spot.image} className="location-img" />}
                 </div>
                 <div className="bottom">
-                    {/* {spot.area && <p>{spot.area}</p>} */}
                     <h2>Nearby Destinations</h2>
-                    {/* {spot.landmark && <p>{spot.landmark}</p>} */}
                     <div className="destinations">
                         {spot.landmark && <Destination landmark={spot.landmark} />}
-
                     </div>
                 </div>
-            </div >
-
-        </div >
+            </div>
+        </div>
     );
 }
 
 export default SpotCard;
-
