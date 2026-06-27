@@ -22,8 +22,7 @@ export type QueueCardProps = {
 };
 
 function SpotCard({ spot, distance }: QueueCardProps) {
-    const SNAPS = ['snap-peek', 'snap-mid', 'snap-expanded'];
-
+    const SNAPS = ['snap-peek', 'snap-expanded'];
     const cardRef = useRef<HTMLDivElement>(null);
     const [snap, setSnap] = useState('snap-peek');
     const dragStart = useRef<number | null>(null);
@@ -36,6 +35,8 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         );
     }
 
+
+
     function onPointerDown(e: React.PointerEvent) {
         if (shouldIgnoreDrag(e.target)) return;
         dragStart.current = e.clientY;
@@ -46,23 +47,23 @@ function SpotCard({ spot, distance }: QueueCardProps) {
 
     function onPointerMove(e: React.PointerEvent) {
         if (dragStart.current === null) return;
+        if (snapAtStart.current === 'snap-expanded' && cardRef.current!.scrollTop > 0) return;
         const dy = e.clientY - dragStart.current;
-        const base = snapAtStart.current === 'snap-expanded' ? '0px'
-            : snapAtStart.current === 'snap-mid' ? '40%'
-                : 'calc(100% - 140px)';
-        cardRef.current!.style.transform = `translateY(calc(${base} + ${dy}px))`;
+        const cardHeight = cardRef.current!.getBoundingClientRect().height;
+        const base = snapAtStart.current === 'snap-expanded' ? 0 : cardHeight - 140;
+        const newY = Math.max(0, Math.min(cardHeight - 140, base + dy));
+        cardRef.current!.style.transform = `translateY(${newY}px)`;
     }
 
     function onPointerUp(e: React.PointerEvent) {
-        const dy = e.clientY - (dragStart.current ?? e.clientY);
+        if (dragStart.current === null) return;
+        const dy = e.clientY - dragStart.current;
         dragStart.current = null;
         cardRef.current?.classList.remove('dragging');
         cardRef.current!.style.transform = '';
 
-        const idx = SNAPS.indexOf(snapAtStart.current ?? '');
-        if (dy < -60 && idx < 2) setSnap(SNAPS[idx + 1]);
-        else if (dy > 60 && idx > 0) setSnap(SNAPS[idx - 1]);
-        else setSnap(snapAtStart.current!);
+        if (snap === 'snap-peek' && dy < -60) setSnap('snap-expanded');
+        else if (snap === 'snap-expanded' && dy > 60 && cardRef.current!.scrollTop === 0) setSnap('snap-peek');
     }
 
     function openNavigation() {
@@ -71,13 +72,11 @@ function SpotCard({ spot, distance }: QueueCardProps) {
     }
 
     return (
-        <div ref={cardRef} className={`spot-card ${snap}`}>
-            <div
-                className="sheet-drag-area"
-                onPointerDown={onPointerDown}
-                onPointerMove={onPointerMove}
-                onPointerUp={onPointerUp}
-            >
+        <div ref={cardRef} className={`spot-card ${snap}`}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}>
+            <div className="sheet-drag-area">
                 <div className="sheet-handle" />
             </div>
 

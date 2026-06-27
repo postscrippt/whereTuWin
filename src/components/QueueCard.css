@@ -1,6 +1,7 @@
 .spot-card {
     width: auto;
     /* height: 507px; */
+    height: auto;
     flex-shrink: 0;
     position: absolute;
     z-index: 1500;
@@ -78,46 +79,31 @@
         right: 0;
         left: 0;
         bottom: 0;
-
         width: 100%;
+        height: auto;
+        /* sizes to content */
         max-height: calc(100dvh - 24px);
-
+        /* but never taller than screen */
         padding: 0 24px 32px;
         box-sizing: border-box;
-
         border-radius: 24px 24px 0 0;
         background-color: #fffdf6;
         border: 2px solid #f46021;
         border-bottom: none;
-
         z-index: 2000;
         transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-        overflow: hidden;
+        overflow-y: hidden;
     }
 
-    .spot-card.dragging {
-        transition: none;
-    }
-
-    /* snap states — set via JS */
     .spot-card.snap-peek {
         transform: translateY(calc(100% - 140px));
-        overflow: hidden;
-    }
-
-    .spot-card.snap-mid {
-        transform: translateY(40%);
-        overflow: hidden;
+        overflow-y: hidden;
     }
 
     .spot-card.snap-expanded {
         transform: translateY(0);
         overflow-y: auto;
-    }
-
-
-    .spot-card.collapsed {
-        transform: translateY(calc(100% - 140px));
+        /* scroll only if content exceeds max-height */
     }
 
     .sheet-handle {
