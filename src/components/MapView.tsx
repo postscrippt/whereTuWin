@@ -188,6 +188,16 @@ export default function MapView({ spots = queueSpots }: Props) {
     );
   }, []);
 
+  const selectedDistance =
+    selectedSpot && userLocation
+      ? getDistance(
+        userLocation[0],
+        userLocation[1],
+        selectedSpot.lat,
+        selectedSpot.lng,
+      )
+      : undefined;
+
   return (
     <div className="map-page">
       <div style={{ position: "relative", height: "100vh", width: "100%" }}>
@@ -250,6 +260,7 @@ export default function MapView({ spots = queueSpots }: Props) {
         selectedSpot && (
           <QueueCard
             spot={selectedSpot}
+            distance={selectedDistance}
             onClose={() => setSelectedSpot(null)}
           />
         )

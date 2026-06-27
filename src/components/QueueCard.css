@@ -20,6 +20,29 @@
     height: 100vh;
 }
 
+.navigate-button {
+    appearance: none;
+    border: none;
+    background: none;
+    padding: 0;
+    margin: 0;
+
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+
+    box-shadow: none;
+    outline: none;
+    text-align: inherit;
+
+    cursor: pointer;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
 @media (min-width: 426px) {
     .spot-card {
         top: 140px;
@@ -98,7 +121,7 @@
 
     .sheet-drag-area {
         width: 100%;
-        padding: 10px 0 14px;
+        padding: 0;
         cursor: grab;
         touch-action: none;
     }
@@ -108,9 +131,30 @@
     }
 
     .title {
+        min-height: 70px;
         display: flex;
         gap: 18px;
         justify-content: space-between;
         align-items: center;
+    }
+
+    h2 {
+        margin: 0;
+    }
+
+    .distance {
+        color: #3F3F3F;
+    }
+
+    .location-img {
+        aspect-ratio: 141/71;
+
+        display: block;
+        margin-top: 30px;
+        margin-left: auto;
+        margin-right: auto;
+
+        max-width: 100%;
+        height: auto;
     }
 }
