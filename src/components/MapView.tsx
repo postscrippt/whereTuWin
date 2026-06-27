@@ -4,7 +4,7 @@ import {
   TileLayer,
   Marker,
   useMap,
-  CircleMarker,
+  CircleMarker, useMapEvents
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -27,6 +27,16 @@ L.Icon.Default.mergeOptions({
 type Props = {
   spots?: Spot[];
 };
+
+function CloseCardOnMapClick({ onClose }: { onClose: () => void }) {
+  useMapEvents({
+    click: () => {
+      onClose();
+    },
+  });
+
+  return null;
+}
 
 // const testSpots: Spot[] = [
 //   { id: 1, name: "B Dorm Bus Stop", lat: 14.0773, lng: 100.5951 },
@@ -202,6 +212,7 @@ export default function MapView({ spots = queueSpots }: Props) {
             onFlyStart={() => setFlying(true)}
             onFlyEnd={() => setFlying(false)}
           /> */}
+          <CloseCardOnMapClick onClose={() => setSelectedSpot(null)} />
           <MapButtons
             userLocation={userLocation}
             spots={spots}
@@ -224,12 +235,13 @@ export default function MapView({ spots = queueSpots }: Props) {
               key={spot.id}
               position={[spot.lat, spot.lng]}
               eventHandlers={{
-                // click: () => setSelected([spot.lat, spot.lng]),
-                click: () => setSelectedSpot(spot),
-                // click: () => setSelected([spot.lat, spot.lng]),
+                click: (event) => {
+                  event.originalEvent.stopPropagation();
+                  setSelectedSpot(spot);
+                },
               }}
             >
-              {/* <Popup>{spot.name}</Popup> */}
+              {/* <Popup autoPan={false}>{spot.name}</Popup> */}
             </Marker>
           ))}
         </MapContainer>
