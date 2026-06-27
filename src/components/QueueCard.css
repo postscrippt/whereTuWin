@@ -181,4 +181,10 @@
     .spot-card a {
         touch-action: manipulation;
     }
+
+    .destinations {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 }

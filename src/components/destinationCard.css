@@ -1,0 +1,32 @@
+.box {
+    width: 359px;
+    height: 65px;
+    flex-shrink: 0;
+
+    border-radius: 10px;
+    background: #FFE9A0;
+    margin-bottom: 8px;
+
+
+}
+
+.landmark-text {
+    color: #000;
+    padding: 20px;
+
+    /* H2 */
+    font-family: "Iosevka Charon";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.innerBox {
+    display: flex;
+    justify-content: space-between;
+}
+
+.arrow {
+    margin-right: 19px;
+}
