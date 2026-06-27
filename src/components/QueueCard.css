@@ -18,7 +18,7 @@
 .map-page {
     position: relative;
     width: 100%;
-    height: 100vh;
+    height: 100dvh;
 }
 
 .navigate-button {
@@ -82,7 +82,7 @@
         width: 100%;
         height: auto;
         /* sizes to content */
-        max-height: calc(100dvh - 24px);
+        max-height: calc(100dvh - 90px);
         /* but never taller than screen */
         padding: 0 24px 32px;
         box-sizing: border-box;
@@ -92,7 +92,7 @@
         border-bottom: none;
         z-index: 2000;
         transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
-        overflow-y: hidden;
+
     }
 
     .spot-card.snap-peek {
@@ -103,7 +103,8 @@
     .spot-card.snap-expanded {
         transform: translateY(0);
         overflow-y: auto;
-        /* scroll only if content exceeds max-height */
+        height: auto;
+        /* let it grow to content */
     }
 
     .sheet-handle {
@@ -174,9 +175,24 @@
 
     .bottom {
         margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
     }
 
-    .destinations {
+    /* .destinations {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    } */
+    .card {
+        display: flex;
+        flex-direction: column;
+        padding-bottom: 32px;
+        /* breathing room at the bottom */
+    }
+
+    .inBottom {
         display: flex;
         flex-direction: column;
         align-items: center;
