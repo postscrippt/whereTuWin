@@ -12,10 +12,21 @@ import L from "leaflet";
 import QueueCard from "./QueueCard";
 import { queueSpots, type Spot } from "../data/queueSpots";
 
-L.Icon.Default.mergeOptions({
-  iconUrl: "/marker-icon.png",
-  iconRetinaUrl: "/marker-icon-2x.png",
-  shadowUrl: "/marker-shadow.png",
+const ORANGE = "#F46021";
+const GREEN = "#6DAC56";
+
+const unselectedIcon = L.divIcon({
+  html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 16 22" width="22" height="30"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="none" stroke="${ORANGE}" stroke-width="1.5"/><circle cx="7" cy="7" r="2.5" fill="none" stroke="${ORANGE}" stroke-width="1.5"/></svg>`,
+  className: "",
+  iconSize: [22, 30],
+  iconAnchor: [11, 30],
+});
+
+const selectedIcon = L.divIcon({
+  html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1 -1 16 22" width="26" height="36"><path d="M7 0C3.13 0 0 3.13 0 7c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="${GREEN}"/><circle cx="7" cy="7" r="2.5" fill="white"/></svg>`,
+  className: "",
+  iconSize: [26, 36],
+  iconAnchor: [13, 36],
 });
 
 type Props = {
@@ -172,7 +183,7 @@ export default function MapView({ spots = queueSpots }: Props) {
           style={{ height: "100%", width: "100%" }}
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
             attribution="© OpenStreetMap contributors © CARTO"
           />
           <CloseCardOnMapClick onClose={() => setSelectedSpot(null)} />
@@ -198,6 +209,9 @@ export default function MapView({ spots = queueSpots }: Props) {
             <Marker
               key={spot.id}
               position={[spot.lat, spot.lng]}
+              icon={
+                selectedSpot?.id === spot.id ? selectedIcon : unselectedIcon
+              }
               eventHandlers={{
                 click: (event) => {
                   event.originalEvent.stopPropagation();
