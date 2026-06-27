@@ -43,6 +43,17 @@
     flex-direction: column;
 }
 
+.sheet-drag-area {
+    width: 100%;
+    padding: 0;
+    cursor: grab;
+    touch-action: none;
+}
+
+.sheet-drag-area:active {
+    cursor: grabbing;
+}
+
 @media (min-width: 426px) {
     .spot-card {
         top: 140px;
@@ -116,13 +127,9 @@
         transform: translateY(calc(100% - 160px));
     } */
 
-    .spot-card.expanded {
-        transform: translateY(0);
-    }
-
     .sheet-drag-area {
         width: 100%;
-        padding: 0;
+        padding: 12px 0 16px;
         cursor: grab;
         touch-action: none;
     }
