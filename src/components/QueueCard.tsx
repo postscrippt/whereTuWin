@@ -46,8 +46,17 @@ function SpotCard({ spot, distance }: QueueCardProps) {
     const cardRef = useRef<HTMLDivElement | null>(null);
     const startY = useRef(0);
     const startTranslate = useRef(0);
+    const isDragging = useRef(false);
+    const currentY = useRef<number | null>(null);
 
     const peekHeight = 110;
+
+    function shouldIgnoreDrag(target: EventTarget | null) {
+        return (
+            target instanceof HTMLElement &&
+            Boolean(target.closest("button, a, input, textarea, select, [data-no-drag]"))
+        );
+    }
 
     function getCollapsedY() {
         if (!cardRef.current) return 0;
@@ -66,16 +75,20 @@ function SpotCard({ spot, distance }: QueueCardProps) {
     }
 
     function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+        if (shouldIgnoreDrag(event.target)) return;
+
         const collapsedY = getCollapsedY();
 
+        isDragging.current = true;
         startY.current = event.clientY;
         startTranslate.current = isExpanded ? 0 : collapsedY;
+        currentY.current = startTranslate.current;
 
         event.currentTarget.setPointerCapture(event.pointerId);
     }
 
     function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
-        if (event.buttons !== 1) return;
+        if (!isDragging.current) return;
 
         const collapsedY = getCollapsedY();
         const deltaY = event.clientY - startY.current;
@@ -85,17 +98,25 @@ function SpotCard({ spot, distance }: QueueCardProps) {
             collapsedY,
         );
 
+        currentY.current = nextY;
         setDragY(nextY);
     }
 
     function handlePointerUp() {
-        if (dragY === null) return;
+        if (!isDragging.current) return;
+
+        isDragging.current = false;
 
         const collapsedY = getCollapsedY();
-        const shouldExpand = dragY < collapsedY / 2;
+        const finalY = currentY.current;
+
+        if (finalY === null) return;
+
+        const shouldExpand = finalY < collapsedY / 2;
 
         setIsExpanded(shouldExpand);
         setDragY(null);
+        currentY.current = null;
     }
 
     function openNavigation() {
@@ -113,16 +134,14 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                     ? { transform: `translateY(${dragY}px)` }
                     : undefined
             }
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
         >
-            <div
-                className="sheet-drag-area"
-                onPointerDown={handlePointerDown}
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerCancel={handlePointerUp}
-            >
+            <div className="sheet-drag-area">
                 <div className="sheet-handle" />
-            </div>
+            </div >
 
             {/* <button className="spot-card-close" onClick={onClose}>
                 ×
@@ -153,9 +172,9 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                     <h2>Nearby Destinations</h2>
                     {spot.landmark && <p>Nearby: {spot.landmark}</p>}
                 </div>
-            </div>
+            </div >
 
-        </div>
+        </div >
     );
 }
 

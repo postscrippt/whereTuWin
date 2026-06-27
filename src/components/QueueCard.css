@@ -165,4 +165,14 @@
         max-width: 100%;
         height: auto;
     }
+
+    .spot-card {
+        touch-action: none;
+    }
+
+    .navigate-button,
+    .spot-card button,
+    .spot-card a {
+        touch-action: manipulation;
+    }
 }
