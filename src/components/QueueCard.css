@@ -1,200 +1,200 @@
 .spot-card {
-    width: auto;
-    /* height: 507px; */
-    height: auto;
-    flex-shrink: 0;
-    position: absolute;
-    z-index: 1500;
+  width: auto;
+  /* height: 507px; */
+  height: auto;
+  flex-shrink: 0;
+  position: absolute;
+  z-index: 1500;
 
-    padding: 20px;
-    box-sizing: border-box;
+  padding: 20px;
+  box-sizing: border-box;
 
-    background-color: #fffdf6;
-    border: 2px solid #f46021;
+  background-color: #fffdf6;
+  border: 2px solid #f46021;
 
-    overflow-y: auto;
+  overflow-y: auto;
 }
 
 .map-page {
-    position: relative;
-    width: 100%;
-    height: 100dvh;
+  position: relative;
+  width: 100%;
+  height: 100dvh;
 }
 
 .navigate-button {
-    appearance: none;
-    border: none;
-    background: none;
-    padding: 0;
-    margin: 0;
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
 
-    font: inherit;
-    color: inherit;
-    line-height: inherit;
+  font: inherit;
+  color: inherit;
+  line-height: inherit;
 
-    box-shadow: none;
-    outline: none;
-    text-align: inherit;
+  box-shadow: none;
+  outline: none;
+  text-align: inherit;
 
-    cursor: pointer;
+  cursor: pointer;
 }
 
 .card {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .sheet-drag-area {
-    width: 100%;
-    padding: 0;
-    cursor: grab;
-    touch-action: none;
+  width: 100%;
+  padding: 0;
+  cursor: grab;
+  touch-action: none;
 }
 
 .sheet-drag-area:active {
-    cursor: grabbing;
+  cursor: grabbing;
 }
 
 @media (min-width: 431px) {
-    .spot-card {
-        top: 140px;
-        right: 32px;
+  .spot-card {
+    top: 140px;
+    right: 32px;
 
-        width: 360px;
-        padding: 24px;
+    width: 360px;
+    padding: 24px;
 
-        border-radius: 20px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-    }
+    border-radius: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  }
 
-    .sheet-handle {
-        display: none;
-    }
+  .sheet-handle {
+    display: none;
+  }
 }
 
 /* Mobile */
 @media (max-width: 430px) {
-    .spot-card {
-        position: fixed;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: auto;
-        /* sizes to content */
-        max-height: calc(100dvh - 90px);
-        /* but never taller than screen */
-        padding: 0 24px 32px;
-        box-sizing: border-box;
-        border-radius: 24px 24px 0 0;
-        background-color: #fffdf6;
-        border: 2px solid #f46021;
-        border-bottom: none;
-        z-index: 2000;
-        transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+  .spot-card {
+    position: fixed;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: auto;
+    /* sizes to content */
+    max-height: calc(100dvh - 90px);
+    /* but never taller than screen */
+    padding: 0 24px 32px;
+    box-sizing: border-box;
+    border-radius: 24px 24px 0 0;
+    background-color: #fffdf6;
+    border: 2px solid #f46021;
+    border-bottom: none;
+    z-index: 2000;
+    transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
+    will-change: transform;
+  }
 
-    }
+  .spot-card.snap-peek {
+    transform: translateY(calc(100% - 140px));
+    overflow-y: hidden;
+  }
 
-    .spot-card.snap-peek {
-        transform: translateY(calc(100% - 140px));
-        overflow-y: hidden;
-    }
+  .spot-card.snap-expanded {
+    transform: translateY(0);
+    overflow-y: auto;
+    height: auto;
+    /* let it grow to content */
+  }
 
-    .spot-card.snap-expanded {
-        transform: translateY(0);
-        overflow-y: auto;
-        height: auto;
-        /* let it grow to content */
-    }
+  .sheet-handle {
+    display: block;
 
-    .sheet-handle {
-        display: block;
+    width: 48px;
+    height: 5px;
 
-        width: 48px;
-        height: 5px;
+    margin: 0 auto 16px;
 
-        margin: 0 auto 16px;
+    border: none;
+    border-radius: 999px;
+    background-color: #d8d2c4;
 
-        border: none;
-        border-radius: 999px;
-        background-color: #d8d2c4;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+  }
 
-        cursor: pointer;
-        transition: transform 0.25s ease;
-    }
-
-    /* .spot-card.collapsed {
+  /* .spot-card.collapsed {
         transform: translateY(calc(100% - 160px));
     } */
 
-    .sheet-drag-area {
-        width: 100%;
-        padding: 12px 0 16px;
-        cursor: grab;
-        touch-action: none;
-    }
+  .sheet-drag-area {
+    width: 100%;
+    padding: 12px 0 16px;
+    cursor: grab;
+    touch-action: none;
+  }
 
-    .sheet-drag-area:active {
-        cursor: grabbing;
-    }
+  .sheet-drag-area:active {
+    cursor: grabbing;
+  }
 
-    .title {
-        min-height: 72px;
-        margin-bottom: 10px;
-        display: flex;
-        gap: 18px;
-        justify-content: space-between;
-        align-items: center;
-    }
+  .title {
+    min-height: 72px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 18px;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-    h2 {
-        margin: 0;
-    }
+  h2 {
+    margin: 0;
+  }
 
-    .distance {
-        color: #3F3F3F;
-    }
+  .distance {
+    color: #3f3f3f;
+  }
 
-    .location-img {
-        aspect-ratio: 141/71;
+  .location-img {
+    aspect-ratio: 141/71;
 
-        display: block;
-        margin-top: 10px;
-        margin-left: auto;
-        margin-right: auto;
+    display: block;
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
 
-        max-width: 100%;
-        height: auto;
-    }
+    max-width: 100%;
+    height: auto;
+  }
 
-    .navigate-button,
-    .spot-card button,
-    .spot-card a {
-        touch-action: manipulation;
-    }
+  .navigate-button,
+  .spot-card button,
+  .spot-card a {
+    touch-action: manipulation;
+  }
 
-    .bottom {
-        margin-top: 10px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
+  .bottom {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    /* .destinations {
+  /* .destinations {
         display: flex;
         flex-direction: column;
         align-items: center;
     } */
-    .card {
-        display: flex;
-        flex-direction: column;
-        padding-bottom: 32px;
-        /* breathing room at the bottom */
-    }
+  .card {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 32px;
+    /* breathing room at the bottom */
+  }
 
-    .inBottom {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  .inBottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }
