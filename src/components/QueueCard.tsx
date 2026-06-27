@@ -40,8 +40,19 @@ export type QueueCardProps = {
 // }
 
 function SpotCard({ spot, distance }: QueueCardProps) {
-    const dragStartY = useRef<number | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
+    const [dragY, setDragY] = useState<number | null>(null);
+
+    const cardRef = useRef<HTMLDivElement | null>(null);
+    const startY = useRef(0);
+    const startTranslate = useRef(0);
+
+    const peekHeight = 110;
+
+    function getCollapsedY() {
+        if (!cardRef.current) return 0;
+        return cardRef.current.getBoundingClientRect().height - peekHeight;
+    }
 
     function handleWheel(event: React.WheelEvent<HTMLDivElement>) {
         if (event.deltaY < 0) {
@@ -54,25 +65,37 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         }
     }
 
-    function handleDragStart(event: React.PointerEvent<HTMLDivElement>) {
-        dragStartY.current = event.clientY;
+    function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+        const collapsedY = getCollapsedY();
+
+        startY.current = event.clientY;
+        startTranslate.current = isExpanded ? 0 : collapsedY;
+
         event.currentTarget.setPointerCapture(event.pointerId);
     }
 
-    function handleDragEnd(event: React.PointerEvent<HTMLDivElement>) {
-        if (dragStartY.current === null) return;
+    function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+        if (event.buttons !== 1) return;
 
-        const dragDistance = event.clientY - dragStartY.current;
+        const collapsedY = getCollapsedY();
+        const deltaY = event.clientY - startY.current;
 
-        if (dragDistance < -40) {
-            setIsExpanded(true);
-        }
+        const nextY = Math.min(
+            Math.max(startTranslate.current + deltaY, 0),
+            collapsedY,
+        );
 
-        if (dragDistance > 40) {
-            setIsExpanded(false);
-        }
+        setDragY(nextY);
+    }
 
-        dragStartY.current = null;
+    function handlePointerUp() {
+        if (dragY === null) return;
+
+        const collapsedY = getCollapsedY();
+        const shouldExpand = dragY < collapsedY / 2;
+
+        setIsExpanded(shouldExpand);
+        setDragY(null);
     }
 
     function openNavigation() {
@@ -82,13 +105,21 @@ function SpotCard({ spot, distance }: QueueCardProps) {
 
     return (
         <div
+            ref={cardRef}
             className={`spot-card ${isExpanded ? "expanded" : "collapsed"}`}
             onWheel={handleWheel}
+            style={
+                dragY !== null
+                    ? { transform: `translateY(${dragY}px)` }
+                    : undefined
+            }
         >
             <div
                 className="sheet-drag-area"
-                onPointerDown={handleDragStart}
-                onPointerUp={handleDragEnd}
+                onPointerDown={handlePointerDown}
+                onPointerMove={handlePointerMove}
+                onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
             >
                 <div className="sheet-handle" />
             </div>
