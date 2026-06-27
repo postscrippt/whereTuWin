@@ -22,7 +22,7 @@ export type QueueCardProps = {
 };
 
 function SpotCard({ spot, distance }: QueueCardProps) {
-    const SNAPS = ['snap-peek', 'snap-expanded'];
+    // const SNAPS = ['snap-peek', 'snap-expanded'];
     const cardRef = useRef<HTMLDivElement>(null);
     const [snap, setSnap] = useState('snap-peek');
     const dragStart = useRef<number | null>(null);
