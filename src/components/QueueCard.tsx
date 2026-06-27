@@ -39,7 +39,7 @@ export type QueueCardProps = {
 //     );
 // }
 
-function SpotCard({ spot, onClose }: QueueCardProps) {
+function SpotCard({ spot }: QueueCardProps) {
     const dragStartY = useRef<number | null>(null);
     const [isExpanded, setIsExpanded] = useState(false);
 
@@ -88,16 +88,18 @@ function SpotCard({ spot, onClose }: QueueCardProps) {
                 <div className="sheet-handle" />
             </div>
 
-            <button className="spot-card-close" onClick={onClose}>
+            {/* <button className="spot-card-close" onClick={onClose}>
                 ×
-            </button>
+            </button> */}
+            <div className="title">
+                <h2>{spot.name}</h2>
+                {spot.area && <p>{spot.area}</p>}
+                {spot.landmark && <p>Nearby: {spot.landmark}</p>}
+                {spot.hours && <p>Hours: {spot.hours}</p>}
 
-            <h2>{spot.name}</h2>
-            {spot.area && <p>{spot.area}</p>}
-            {spot.landmark && <p>Nearby: {spot.landmark}</p>}
-            {spot.hours && <p>Hours: {spot.hours}</p>}
+                <button className="navigate-button">Navigate</button>
+            </div>
 
-            <button className="navigate-button">Navigate</button>
         </div>
     );
 }
