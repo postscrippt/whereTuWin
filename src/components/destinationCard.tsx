@@ -7,15 +7,12 @@ type DestinationCardProps = {
 function destinationCard({ landmark }: DestinationCardProps) {
     return (
         <div className="box">
-            {landmark && landmark.length > 0 && (
-                <div>
-                    <ul>
-                        {landmark.map((landmark) => (
-                            <li key={landmark}>{landmark}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
+            {landmark &&
+                landmark.map((landmark, index) => (
+                    <div className="box" key={`${landmark}-${index}`}>
+                        <p className="landmark-text">{landmark}</p>
+                    </div>
+                ))}
         </div>
     )
 }

@@ -174,7 +174,7 @@ function SpotCard({ spot, distance }: QueueCardProps) {
                     {/* {spot.area && <p>{spot.area}</p>} */}
                     <h2>Nearby Destinations</h2>
                     {/* {spot.landmark && <p>{spot.landmark}</p>} */}
-                    <Destination />
+                    <Destination landmark={spot.landmark} />
                 </div>
             </div >
 
