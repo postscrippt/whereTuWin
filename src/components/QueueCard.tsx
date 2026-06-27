@@ -21,8 +21,8 @@ export type QueueCardProps = {
     onClose: () => void;
 };
 
-function SpotCard({ spot, distance }: QueueCardProps) {
-    // const SNAPS = ['snap-peek', 'snap-expanded'];
+function SpotCard({ spot, distance, onClose }: QueueCardProps) {
+    // c
     const cardRef = useRef<HTMLDivElement>(null);
     const [snap, setSnap] = useState('snap-peek');
     const dragStart = useRef<number | null>(null);
@@ -35,7 +35,12 @@ function SpotCard({ spot, distance }: QueueCardProps) {
         );
     }
 
-
+    function closeWithAnimation() {
+        if (!cardRef.current) return;
+        cardRef.current.style.transform = `translateY(100%)`;
+        cardRef.current.style.transition = 'transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)';
+        setTimeout(() => onClose(), 300);
+    }
 
     function onPointerDown(e: React.PointerEvent) {
         if (shouldIgnoreDrag(e.target)) return;
@@ -64,6 +69,7 @@ function SpotCard({ spot, distance }: QueueCardProps) {
 
         if (snap === 'snap-peek' && dy < -60) setSnap('snap-expanded');
         else if (snap === 'snap-expanded' && dy > 60 && cardRef.current!.scrollTop === 0) setSnap('snap-peek');
+        else if (snap === 'snap-peek' && dy > 60) closeWithAnimation();
     }
 
     function openNavigation() {
