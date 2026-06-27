@@ -4,7 +4,7 @@ import {
   TileLayer,
   Marker,
   useMap,
-  CircleMarker, useMapEvents
+  CircleMarker, useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -99,12 +99,15 @@ function MapButtons({
   onFlyStart,
   onFlyEnd,
   onSelectSpot,
+  isCardOpen,
 }: {
   userLocation: [number, number] | null;
   spots: Spot[];
   onFlyStart: () => void;
   onFlyEnd: () => void;
+
   onSelectSpot: (spot: Spot) => void;
+  isCardOpen: boolean;
 }) {
   const map = useMap();
 
@@ -138,12 +141,13 @@ function MapButtons({
     <div
       style={{
         position: "absolute",
-        bottom: "32px",
+        bottom: isCardOpen ? "160px" : "32px",
         right: "16px",
         zIndex: 1000,
         display: "flex",
         flexDirection: "column",
         gap: "8px",
+        transition: "bottom 0.25s ease",
       }}
     >
       <button
@@ -233,6 +237,7 @@ export default function MapView({ spots = queueSpots }: Props) {
             onFlyStart={() => setFlying(true)}
             onFlyEnd={() => setFlying(false)}
             onSelectSpot={setSelectedSpot}
+            isCardOpen={selectedSpot !== null}
           />
           {userLocation && !flying && (
             <CircleMarker
