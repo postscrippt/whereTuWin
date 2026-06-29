@@ -115,15 +115,15 @@ function MapButtons({
 
   return (
     <div
+      className={`map-buttons${isCardOpen ? " map-buttons--card-open" : ""}`}
       style={{
         position: "absolute",
-        bottom: isCardOpen ? "160px" : "32px",
+        bottom: "32px",
         right: "16px",
         zIndex: 1000,
         display: "flex",
         flexDirection: "column",
         gap: "8px",
-        transition: "bottom 0.25s ease",
       }}
     >
       <button
@@ -157,6 +157,11 @@ export default function MapView({ spots = queueSpots }: Props) {
       },
     );
   }, []);
+
+  useEffect(() => {
+    document.body.classList.toggle("card-open", selectedSpot !== null);
+    return () => document.body.classList.remove("card-open");
+  }, [selectedSpot]);
 
   const selectedDistance =
     selectedSpot && userLocation

@@ -93,26 +93,31 @@
 }
 
 /* ===== Desktop / laptop (≥ 431px) ===== */
-@keyframes slide-in-right {
-  from { transform: translateX(100%); }
-  to   { transform: translateX(0); }
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
 }
 
 @media (min-width: 431px) {
   .spot-card {
     position: fixed;
     top: 0;
-    right: 0;
-    width: 400px;
+    left: 0;
+    width: clamp(340px, 30vw, 460px);
     height: 100dvh;
     padding: 24px;
 
-    border-radius: 20px 0 0 20px;
-    border-right: none;
-    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.14);
+    border-radius: 0;
+    border-left: none;
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.14);
 
-    animation: slide-in-right 0.3s ease forwards;
+    animation: slide-in-left 0.3s ease forwards;
     will-change: transform;
+    z-index: 2100;
   }
 
   .sheet-drag-area {

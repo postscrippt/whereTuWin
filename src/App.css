@@ -133,3 +133,13 @@ ul {
   padding: 0;
   gap: 8px;
 }
+
+@media (max-width: 430px) {
+  .map-buttons {
+    transition: bottom 0.25s ease;
+  }
+
+  .map-buttons--card-open {
+    bottom: 160px !important;
+  }
+}
