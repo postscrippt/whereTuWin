@@ -1,17 +1,10 @@
+/* ===== Base (all viewports) ===== */
 .spot-card {
-  width: auto;
-  /* height: 507px; */
-  height: auto;
   flex-shrink: 0;
-  position: absolute;
-  z-index: 1500;
-
-  padding: 20px;
+  z-index: 2000;
   box-sizing: border-box;
-
   background-color: #fffdf6;
   border: 2px solid #f46021;
-
   overflow-y: auto;
 }
 
@@ -42,6 +35,7 @@
 .card {
   display: flex;
   flex-direction: column;
+  padding-bottom: 32px;
 }
 
 .sheet-drag-area {
@@ -55,24 +49,78 @@
   cursor: grabbing;
 }
 
+/* ===== Shared inner-content styles (same visual language on both breakpoints) ===== */
+.title {
+  min-height: 72px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spot-card h2 {
+  margin: 0;
+}
+
+.distance {
+  color: #3f3f3f;
+}
+
+.location-img {
+  aspect-ratio: 141/71;
+
+  display: block;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+
+  max-width: 100%;
+  height: auto;
+}
+
+.bottom {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.inBottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ===== Desktop / laptop (≥ 431px) ===== */
+@keyframes slide-in-right {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+
 @media (min-width: 431px) {
   .spot-card {
-    top: 140px;
-    right: 32px;
-
-    width: 360px;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 400px;
+    height: 100dvh;
     padding: 24px;
 
-    border-radius: 20px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+    border-radius: 20px 0 0 20px;
+    border-right: none;
+    box-shadow: -4px 0 24px rgba(0, 0, 0, 0.14);
+
+    animation: slide-in-right 0.3s ease forwards;
+    will-change: transform;
   }
 
-  .sheet-handle {
+  .sheet-drag-area {
     display: none;
   }
 }
 
-/* Mobile */
+/* ===== Mobile (≤ 430px) ===== */
 @media (max-width: 430px) {
   .spot-card {
     position: fixed;
@@ -81,16 +129,10 @@
     bottom: 0;
     width: 100%;
     height: auto;
-    /* sizes to content */
     max-height: calc(100dvh - 90px);
-    /* but never taller than screen */
     padding: 0 24px 32px;
-    box-sizing: border-box;
     border-radius: 24px 24px 0 0;
-    background-color: #fffdf6;
-    border: 2px solid #f46021;
     border-bottom: none;
-    z-index: 2000;
     transition: transform 0.3s cubic-bezier(0.32, 0.72, 0, 1);
     will-change: transform;
   }
@@ -104,7 +146,6 @@
     transform: translateY(0);
     overflow-y: auto;
     height: auto;
-    /* let it grow to content */
   }
 
   .sheet-handle {
@@ -123,10 +164,6 @@
     transition: transform 0.25s ease;
   }
 
-  /* .spot-card.collapsed {
-        transform: translateY(calc(100% - 160px));
-    } */
-
   .sheet-drag-area {
     width: 100%;
     padding: 12px 0 16px;
@@ -138,63 +175,9 @@
     cursor: grabbing;
   }
 
-  .title {
-    min-height: 72px;
-    margin-bottom: 10px;
-    display: flex;
-    gap: 18px;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  h2 {
-    margin: 0;
-  }
-
-  .distance {
-    color: #3f3f3f;
-  }
-
-  .location-img {
-    aspect-ratio: 141/71;
-
-    display: block;
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-
-    max-width: 100%;
-    height: auto;
-  }
-
   .navigate-button,
   .spot-card button,
   .spot-card a {
     touch-action: manipulation;
-  }
-
-  .bottom {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  /* .destinations {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    } */
-  .card {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 32px;
-    /* breathing room at the bottom */
-  }
-
-  .inBottom {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 }
