@@ -94,6 +94,16 @@
     border-radius: 10px;
 } */
 
+@media (min-width: 431px) {
+  .navbar {
+    transition: padding-left 0.3s ease;
+  }
+
+  body.card-open .navbar {
+    padding-left: calc(clamp(340px, 30vw, 460px) + 28px);
+  }
+}
+
 .dropdown-menu {
     position: absolute;
     top: 90px;
