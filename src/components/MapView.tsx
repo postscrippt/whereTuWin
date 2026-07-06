@@ -10,7 +10,7 @@ import {
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import QueueCard from "./QueueCard";
-import { queueSpots, type Spot } from "../data/queueSpots";
+import { Spots, type Spot } from "../data/queueSpots";
 
 const ORANGE = "#F46021";
 const GREEN = "#6DAC56";
@@ -140,7 +140,7 @@ function MapButtons({
   );
 }
 
-export default function MapView({ spots = queueSpots }: Props) {
+export default function MapView({ spots = Spots }: Props) {
   const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
