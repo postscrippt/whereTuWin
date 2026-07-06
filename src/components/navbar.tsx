@@ -8,6 +8,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 type NavbarProps = {
   variant?: "default" | "back" | "minimal";
+  onSearchClick?: () => void;
 };
 
 const navLinks = [
@@ -19,7 +20,7 @@ const navLinks = [
   },
 ];
 
-function Navbar({ variant = "default" }: NavbarProps) {
+function Navbar({ variant = "default", onSearchClick }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navigate = useNavigate();
@@ -50,7 +51,11 @@ function Navbar({ variant = "default" }: NavbarProps) {
         )}
 
         {variant === "default" && (
-          <button className="nav-icon-button" aria-label="Search">
+          <button
+            className="nav-icon-button"
+            aria-label="Search"
+            onClick={onSearchClick}
+          >
             <span className="search-icon">
               <img src={search} />
             </span>
