@@ -85,70 +85,122 @@ const buttonStyle: React.CSSProperties = {
   justifyContent: "center",
 };
 
+type Coordinates = [number, number];
+type LocationStatus = "loading" | "ready" | "error";
+
+function requestCurrentLocation(): Promise<Coordinates> {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) {
+      reject(new Error("Location is not supported in this browser. Try another browser or browse the map manually."));
+      return;
+    }
+
+    // Also bound the wait if the browser leaves a permission prompt unanswered.
+    const timer = window.setTimeout(() => {
+      reject(new Error("Finding your location took too long. Please try again."));
+    }, 12000);
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        window.clearTimeout(timer);
+        resolve([position.coords.latitude, position.coords.longitude]);
+      },
+      (error) => {
+        window.clearTimeout(timer);
+        const message = error.code === 1
+          ? "Location access was denied. Allow location in your browser's site settings, then retry."
+          : error.code === 3
+            ? "Finding your location took too long. Please try again."
+            : "Your location is unavailable. Check your device's location services and try again.";
+        reject(new Error(message));
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 },
+    );
+  });
+}
+
+function getNearestSpot(location: Coordinates, spots: Spot[]): Spot | null {
+  let nearest: Spot | null = null;
+  let minDistance = Infinity;
+  for (const spot of spots) {
+    const distance = getDistance(location[0], location[1], spot.lat, spot.lng);
+    if (distance < minDistance) {
+      minDistance = distance;
+      nearest = spot;
+    }
+  }
+  return nearest;
+}
+
+function FocusUserLocation({ location }: { location: Coordinates | null }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!location) return;
+    map.flyTo(location, 17, {
+      animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    });
+  }, [map, location]);
+  return null;
+}
+
 function MapButtons({
   userLocation,
   spots,
-  onFlyStart,
-  onFlyEnd,
+  status,
+  error,
+  onRequestLocation,
+  onSelectSpot,
   isCardOpen,
 }: {
-  userLocation: [number, number] | null;
+  userLocation: Coordinates | null;
   spots: Spot[];
-  onFlyStart: () => void;
-  onFlyEnd: () => void;
+  status: LocationStatus;
+  error: string | null;
+  onRequestLocation: () => void;
+  onSelectSpot: (spot: Spot | null) => void;
   isCardOpen: boolean;
 }) {
-  const map = useMap();
+  const locationReady = status === "ready" && userLocation !== null;
 
-  const flyToUser = () => {
-    if (!userLocation) return;
-    onFlyStart();
-    map.flyTo(userLocation, 17);
-    map.once("moveend", onFlyEnd);
-  };
-
-  const flyToNearest = () => {
-    if (!userLocation) return;
-    let nearest = spots[0];
-    let minDist = Infinity;
-    spots.forEach((spot) => {
-      const d = getDistance(
-        userLocation[0],
-        userLocation[1],
-        spot.lat,
-        spot.lng,
-      );
-      if (d < minDist) {
-        minDist = d;
-        nearest = spot;
-      }
-    });
-    onFlyStart();
-    map.flyTo([nearest.lat, nearest.lng], 17);
-    map.once("moveend", onFlyEnd);
-  };
+  function selectNearest() {
+    if (!locationReady || !userLocation) return;
+    const nearest = getNearestSpot(userLocation, spots);
+    // A new selection also recenters a queue that is already open.
+    if (nearest) onSelectSpot({ ...nearest });
+  }
 
   return (
-    <div
-      className={`map-buttons${isCardOpen ? " map-buttons--card-open" : ""}`}
-      style={{
-        position: "absolute",
-        bottom: "32px",
-        right: "16px",
-        zIndex: 1000,
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-      }}
-    >
+    <div className={`map-buttons location-controls${isCardOpen ? " map-buttons--card-open" : ""}`}>
+      <div className="location-feedback" role="status" aria-live="polite" aria-atomic="true">
+        {status === "error" && (
+          <>
+            <p>{error}</p>
+            <p>You can still search or browse the map.</p>
+          </>
+        )}
+        {spots.length === 0 && <p>No queue locations are available yet.</p>}
+      </div>
+      {status === "error" && (
+        <button className="location-retry" type="button" onClick={onRequestLocation}>Retry location</button>
+      )}
       <button
-        onClick={flyToNearest}
+        type="button"
+        onClick={selectNearest}
         style={buttonStyle}
+        disabled={!locationReady || spots.length === 0}
         title="Nearest motorcycle taxi spot"
+        aria-label="Find and open the nearest motorcycle taxi spot"
       >
         🏍️
       </button>
-      <button onClick={flyToUser} style={buttonStyle} title="My location">
+      <button
+        type="button"
+        onClick={onRequestLocation}
+        style={buttonStyle}
+        disabled={!locationReady}
+        title="Refresh my location"
+        aria-label="Refresh and show my location"
+      >
         📍
       </button>
     </div>
@@ -156,21 +208,40 @@ function MapButtons({
 }
 
 export default function MapView({ spots = Spots, selectedSpot, onSelectSpot }: Props) {
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(
-    null,
-  );
-  const [flying, setFlying] = useState(false);
+  const [userLocation, setUserLocation] = useState<Coordinates | null>(null);
+  const [locationTarget, setLocationTarget] = useState<Coordinates | null>(null);
+  const [locationStatus, setLocationStatus] = useState<LocationStatus>("loading");
+  const [locationError, setLocationError] = useState<string | null>(null);
+  const [locationRequest, setLocationRequest] = useState(0);
+
+  function refreshLocation() {
+    setLocationStatus("loading");
+    setLocationError(null);
+    setUserLocation(null);
+    setLocationRequest((request) => request + 1);
+  }
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setUserLocation([pos.coords.latitude, pos.coords.longitude]);
+    let cancelled = false;
+    requestCurrentLocation().then(
+      (coordinates) => {
+        if (cancelled) return;
+        setUserLocation(coordinates);
+        setLocationStatus("ready");
+        if (locationRequest > 0) {
+          onSelectSpot(null);
+          setLocationTarget(coordinates);
+        }
       },
-      () => {
-        console.log("GPS unavailable");
+      (error: unknown) => {
+        if (cancelled) return;
+        setLocationStatus("error");
+        setLocationError(error instanceof Error ? error.message : "Unable to find your location. Please retry.");
       },
     );
-  }, []);
+    // Ignore late GPS callbacks after a retry or after leaving the dashboard.
+    return () => { cancelled = true; };
+  }, [locationRequest, onSelectSpot]);
 
   useEffect(() => {
     document.body.classList.toggle("card-open", selectedSpot !== null);
@@ -215,15 +286,9 @@ export default function MapView({ spots = Spots, selectedSpot, onSelectSpot }: P
             maxZoom={19}
           />
           <FocusSelectedSpot spot={selectedSpot} />
+          <FocusUserLocation location={locationTarget} />
           <CloseCardOnMapClick onClose={() => onSelectSpot(null)} />
-          <MapButtons
-            userLocation={userLocation}
-            spots={spots}
-            onFlyStart={() => setFlying(true)}
-            onFlyEnd={() => setFlying(false)}
-            isCardOpen={selectedSpot !== null}
-          />
-          {userLocation && !flying && (
+          {userLocation && (
             <CircleMarker
               center={userLocation}
               radius={8}
@@ -250,6 +315,15 @@ export default function MapView({ spots = Spots, selectedSpot, onSelectSpot }: P
             />
           ))}
         </MapContainer>
+        <MapButtons
+          userLocation={userLocation}
+          spots={spots}
+          status={locationStatus}
+          error={locationError}
+          onRequestLocation={refreshLocation}
+          onSelectSpot={onSelectSpot}
+          isCardOpen={selectedSpot !== null}
+        />
       </div>
       {selectedSpot && (
         <QueueCard
