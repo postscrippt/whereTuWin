@@ -31,7 +31,22 @@ const selectedIcon = L.divIcon({
 
 type Props = {
   spots?: Spot[];
+  selectedSpot: Spot | null;
+  onSelectSpot: (spot: Spot | null) => void;
 };
+
+function FocusSelectedSpot({ spot }: { spot: Spot | null }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (!spot) return;
+    map.flyTo([spot.lat, spot.lng], 17, {
+      animate: !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    });
+  }, [map, spot]);
+
+  return null;
+}
 
 function CloseCardOnMapClick({ onClose }: { onClose: () => void }) {
   useMapEvents({
@@ -140,8 +155,7 @@ function MapButtons({
   );
 }
 
-export default function MapView({ spots = Spots }: Props) {
-  const [selectedSpot, setSelectedSpot] = useState<Spot | null>(null);
+export default function MapView({ spots = Spots, selectedSpot, onSelectSpot }: Props) {
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null,
   );
@@ -200,7 +214,8 @@ export default function MapView({ spots = Spots }: Props) {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             maxZoom={19}
           />
-          <CloseCardOnMapClick onClose={() => setSelectedSpot(null)} />
+          <FocusSelectedSpot spot={selectedSpot} />
+          <CloseCardOnMapClick onClose={() => onSelectSpot(null)} />
           <MapButtons
             userLocation={userLocation}
             spots={spots}
@@ -229,7 +244,7 @@ export default function MapView({ spots = Spots }: Props) {
               eventHandlers={{
                 click: (event) => {
                   event.originalEvent.stopPropagation();
-                  setSelectedSpot(spot);
+                  onSelectSpot(spot);
                 },
               }}
             />
@@ -240,7 +255,7 @@ export default function MapView({ spots = Spots }: Props) {
         <QueueCard
           spot={selectedSpot}
           distance={selectedDistance}
-          onClose={() => setSelectedSpot(null)}
+          onClose={() => onSelectSpot(null)}
         />
       )}
     </div>
