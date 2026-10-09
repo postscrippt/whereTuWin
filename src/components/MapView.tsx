@@ -196,8 +196,9 @@ export default function MapView({ spots = Spots }: Props) {
           style={{ height: "100%", width: "100%" }}
         >
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-            attribution="© OpenStreetMap contributors © CARTO"
+            url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            maxZoom={19}
           />
           <CloseCardOnMapClick onClose={() => setSelectedSpot(null)} />
           <MapButtons
